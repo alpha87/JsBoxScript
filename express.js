@@ -1,5 +1,4 @@
 main()
-show_label()
 
 function main() {
     $ui.render(
@@ -35,7 +34,7 @@ function main() {
                     },
                     layout: function (make) {
                         make.left.right.bottom.inset(15)
-                        make.top.equalTo($("input").bottom).offset(55)
+                        make.top.equalTo($("input").bottom).offset(35)
                     },
                     events: {
                         didSelect: function (_, _, title) {
@@ -45,55 +44,6 @@ function main() {
                             $("input").text = title
                         }
                     },
-                },
-                {
-                    type: "label",
-                    props: {
-                        id: "record",
-                        textColor: $color("#888888")
-                    },
-                    layout: function (make) {
-                        make.left.equalTo($("input")).offset(20)
-                        make.top.equalTo($("input").bottom).offset(20)
-                    }
-                },
-                {
-                    type: "label",
-                    props: {
-                        id: "delete_all",
-                        textColor: $color("#888888")
-                    },
-                    layout: function (make) {
-                        make.right.equalTo($("input").right).offset(40)
-                        make.top.equalTo($("input").bottom).offset(20)
-                    },
-                    events: {
-                        tapped: function () {
-                            $ui.alert(
-                                {
-                                    title: "删除全部记录",
-                                    message: "选择\"是\"全部清除",
-                                    actions: [
-                                        {
-                                            title: "是",
-                                            handler: function () {
-                                                $cache.clear()
-                                                $("orderList").data = []
-                                                $("record").text = ""
-                                                $("delete_all").text = ""
-                                            }
-                                        },
-                                        {
-                                            title: "否",
-                                            handler: function () {
-
-                                            }
-                                        }
-                                    ]
-                                }
-                            )
-                        }
-                    }
                 },
                 {
                     type: "button",
@@ -237,7 +187,6 @@ function insertOrder(text) {
         })
         saveOrder()
     }
-    show_label()
 }
 
 function deleteOrder(indexPath) {
@@ -248,30 +197,11 @@ function deleteOrder(indexPath) {
         orList.splice(index, 1)
         saveOrder()
     }
-    $delay(0.3, function () {
-        isEmpty()
-    })
 }
 
 function saveOrder() {
     $cache.set("order", clips)
     $cache.set("orList", orList)
-}
-
-function show_label() {
-    if ($cache.get("order")[0]) {
-        $("record").text = "历史记录"
-        $("delete_all").text = "清除全部"
-    } else {
-        isEmpty()
-    }
-}
-
-function isEmpty() {
-    if (!($cache.get("order")[0])) {
-        $("record").text = ""
-        $("delete_all").text = ""
-    }
 }
 
 // 获取快遞公司名称
