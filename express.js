@@ -1,6 +1,5 @@
 main()
 
-
 function main() {
     $ui.render(
         {
@@ -92,13 +91,10 @@ function main() {
     )
 }
 
-
 function newList(order) {
 
     insertOrder(order)
-
     get_com(order)
-
     // 快递详情模板
     var tem_list = {
         views: [{
@@ -176,41 +172,37 @@ function newList(order) {
     })
 }
 
-
 var listView = $("orderList")
-var orList = new Array()
+var orList = $cache.get("orList") || []
 var clips = $cache.get("order") || []
 listView.data = clips
-
 
 function insertOrder(text) {
     clips.unshift(text)
     if (!(orList.includes(text))) {
+        orList.unshift(text)
         listView.insert({
             index: 0,
             value: text
         })
-        orList.push(text)
         saveOrder()
     }
 }
-
 
 function deleteOrder(indexPath) {
     var text = clips[indexPath.row]
     var index = clips.indexOf(text)
     if (index >= 0) {
         clips.splice(index, 1)
-        orList.pop(text)
+        orList.splice(index, 1)
         saveOrder()
     }
 }
 
-
 function saveOrder() {
     $cache.set("order", clips)
+    $cache.set("orList", orList)
 }
-
 
 // 获取快遞公司名称
 function get_com(order) {
@@ -224,7 +216,6 @@ function get_com(order) {
         },
     })
 }
-
 
 // 查询快递状态
 function get_message(comCode, order) {
@@ -249,12 +240,10 @@ function get_message(comCode, order) {
     })
 }
 
-
 // 去前后空格
 function Trim(str) {
     return str.replace(/(^\s*)|(\s*$)/g, "");
 }
-
 
 // 判断是否为订单号
 function isOrder(order) {
@@ -268,7 +257,6 @@ function isOrder(order) {
         return order
     }
 }
-
 
 // 将获取到的信息格式化
 function convert(item) {
