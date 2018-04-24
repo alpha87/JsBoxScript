@@ -61,27 +61,24 @@ function main() {
                             $("input").blur()
                             $("input").text = ""
                             var text = $clipboard.text
-                            if (isNaN(text)) {
-                                if (!$("input").text) {
-                                    $ui.loading(false)
-                                    $ui.alert({
-                                        message: "请输入订单号",
-                                    })
-                                }
+                            if (!$("input").text) {
+                                $ui.loading(false)
+                                $ui.alert({
+                                    message: "请输入订单号",
+                                })
+                            }
+                            let _order = Trim($("input").text)
+                            if (isOrder(_order)) {
+                                $ui.toast("查询中...")
+                                newList(_order)
+                            }
+                            if ($("input").text) {
                                 let _order = Trim($("input").text)
-                                if (isOrder(_order)) {
-                                    $ui.toast("查询中...")
-                                    newList(_order)
-                                }
+                                $ui.toast("查询中...")
+                                newList(_order)
                             } else {
-                                if ($("input").text) {
-                                    let _order = Trim($("input").text)
-                                    $ui.toast("查询中...")
-                                    newList(_order)
-                                } else {
-                                    $ui.toast("查询中...")
-                                    newList(text)
-                                }
+                                $ui.toast("查询中...")
+                                newList(text)
                             }
                         }
                     },
