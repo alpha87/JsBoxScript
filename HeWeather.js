@@ -34,7 +34,8 @@ function getWeather(lat, lng) {
 function showData(wea) {
     var _basic = wea.HeWeather6[0].basic
     var cnty = _basic.cnty
-    var area = _basic.admin_area ? _basic.admin_area != undefined : ""
+    var parent_city = _basic.parent_city
+    var area = _basic.admin_area != undefined ? _basic.admin_area : ""
     var location = _basic.location
     var lat = _basic.lat
     var lng = _basic.lon
@@ -106,7 +107,7 @@ function showData(wea) {
     m._pop = tomorrow["pop"]
     m.uv_index = tomorrow.uv_index
 
-    var data_text = ["# 天气预报 (*无敌省流量*)", "位置:" + cnty + " " + area + " " + location, "经度:" + lng, "纬度:" + lat].join("\n")
+    var data_text = ["# 天气预报 (*无敌省流量*)", "位置:" + cnty + " " + area + " " + parent_city + " " + location, "经度:" + lng, "纬度:" + lat].join("\n")
     var update_text = "天气更新时间: **" + update_date + "**\n"
     var now_text = ["## 实况", "体感温度:" + "**" + fl + "**", "温度:" + "**" + tmp + "**", "天气状况:" + "**" + cond_text + "**", "风向:" + wind_dir,
         "风力:" + wind_sc, "风速:" + wind_spd, "相对湿度:" + hum, "降水量:" + pcpn, "云量:" + cloud + "\n"].join("\n")
