@@ -4,7 +4,7 @@ function getLocation() {
     $location.fetch({
         handler: function (resp) {
             var lat = resp.lat
-            var lng = resp.lat
+            var lng = resp.lng
             getWeather(lat, lng)
 
         }
