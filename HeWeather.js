@@ -19,7 +19,11 @@ function getWeather(lat, lng) {
         handler: function (resp) {
             var data = resp.data
             if (data.HeWeather6[0].status == "ok") {
-                showData(data)
+                if ($app.env == $env.today) {
+                    showToday(data)
+                } else {
+                    showData(data)
+                }
             } else {
                 $ui.alert({
                     title: "错误",
@@ -28,6 +32,39 @@ function getWeather(lat, lng) {
             }
         }
     })
+}
+
+// today数据展示
+function showToday(wea) {
+    var _basic = wea.HeWeather6[0].basic
+    var cnty = _basic.cnty
+    var parent_city = _basic.parent_city
+    var area = _basic.admin_area != undefined ? _basic.admin_area : ""
+    var location = _basic.location
+
+    var _now = wea.HeWeather6[0]["now"]
+    var fl = _now.fl
+    var tmp = _now.tmp
+
+    var daily_forecast = wea.HeWeather6[0].daily_forecast
+    var today = daily_forecast[0]
+    var tmp_max = today.tmp_max
+    var tmp_min = today.tmp_min
+    var _pop = today["pop"]
+
+    basic_text = "**" + area + parent_city + location + "**"
+    tmp_text = "体感温度: " + fl + "\n此刻温度: " + tmp
+    other_info = "当天气温: " + tmp_min + "~" + tmp_max + "\n" + "降水概率: " + _pop + "%"
+    $ui.render({
+        views: [{
+            type: "markdown",
+            props: {
+                content: [basic_text, tmp_text, other_info].join("\n")
+            },
+            layout: $layout.fill,
+        }]
+    })
+
 }
 
 // 展示数据
@@ -119,7 +156,7 @@ function showData(wea) {
         "风力:" + m.wind_sc, "相对温度:" + m.hum, "降水量:" + m.pcpn, "降水概率:" + m._pop, "紫外线强度指数:" + m.uv_index].join("\n")
     $ui.render({
         props: {
-            title: ""
+            title: "和风天气"
         },
         views: [{
             type: "markdown",
