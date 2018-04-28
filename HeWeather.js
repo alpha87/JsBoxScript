@@ -127,23 +127,6 @@ function showData(wea) {
     t._pop = today["pop"]
     t.uv_index = today.uv_index
 
-    var m = wea_tmp
-    m._date = tomorrow["date"]
-    m.sr = tomorrow.sr
-    m.ss = tomorrow.ss
-    m.mr = tomorrow.mr
-    m.ms = tomorrow.ms
-    m.tmp_max = tomorrow.tmp_max
-    m.tmp_min = tomorrow.tmp_min
-    m.cond_txt_d = tomorrow.cond_txt_d
-    m.cond_txt_n = tomorrow.cond_txt_n
-    m.wind_dir = tomorrow.wind_dir
-    m.wind_sc = tomorrow.wind_sc
-    m.hum = tomorrow.hum
-    m.pcpn = tomorrow.pcpn
-    m._pop = tomorrow["pop"]
-    m.uv_index = tomorrow.uv_index
-
     var data_text = ["# 天气预报 (*无敌省流量*)", "位置:" + cnty + " " + area + " " + parent_city + " " + location, "经度:" + lng, "纬度:" + lat].join("\n")
     var update_text = "天气更新时间: **" + update_date + "**\n"
     var now_text = ["## 实况", "体感温度:" + "**" + fl + "**", "温度:" + "**" + tmp + "**", "天气状况:" + "**" + cond_text + "**", "风向:" + wind_dir,
@@ -151,10 +134,8 @@ function showData(wea) {
     var daily_text_d = ["## 天气预报", "预报日期:" + t._date, "日出时间:" + t.sr, "日落时间:" + t.ss, "月升时间:" + t.mr, "月落时间:" + t.ms,
         "最高温度:" + "**" + t.tmp_max + "**", "最低温度:" + "**" + t.tmp_min + "**", "白天天气状况:" + t.cond_txt_d, "夜晚天气状况:" + t.cond_txt_n, "风向:" + t.wind_dir,
         "风力:" + t.wind_sc, "相对温度:" + t.hum, "降水量:" + t.pcpn, "降水概率:" + "**" + t._pop + "**", "紫外线强度指数:" + t.uv_index].join("\n")
-    var daily_text_t = [" ", "预报日期:" + m._date, "日出时间:" + m.sr, "日落时间:" + m.ss, "月升时间:" + m.mr, "月落时间:" + m.ms,
-        "最高温度:" + m.tmp_max, "最低温度:" + m.tmp_min, "白天天气状况:" + m.cond_txt_d, "夜晚天气状况:" + m.cond_txt_n, "风向:" + m.wind_dir,
-        "风力:" + m.wind_sc, "相对温度:" + m.hum, "降水量:" + m.pcpn, "降水概率:" + m._pop, "紫外线强度指数:" + m.uv_index].join("\n")
-    $ui.render({
+    
+        $ui.render({
         props: {
             title: "和风天气"
         },
@@ -162,7 +143,7 @@ function showData(wea) {
             type: "markdown",
             props: {
                 font: $font(20),
-                content: [data_text, update_text, now_text, daily_text_d, daily_text_t].join("\n"),
+                content: [data_text, update_text, now_text, daily_text_d].join("\n"),
             },
             layout: $layout.fill,
         }]
