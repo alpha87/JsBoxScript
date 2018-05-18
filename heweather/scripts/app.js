@@ -46,6 +46,7 @@ function showData(wea) {
     var tomorrow_wea = daily_forecast["1"]
     var other_wea = daily_forecast["2"]
 
+    $ui.toast("更新时间: " +  update_date)
     $ui.render({
         props: {
             title: "和风天气"
@@ -67,16 +68,11 @@ function showData(wea) {
                 props: {
                     id: "date",
                     font: $font("bold", 20),
-                    text: update_date,
+                    text: update_date.slice(0, 10),
                 },
                 layout: function (make, view) {
                     make.top.equalTo($("local"))
                     make.right.equalTo(-40)
-                },
-                events: {
-                    tapped: function () {
-                        $ui.toast("更新时间", 0.7)
-                    }
                 }
             },
             {
@@ -132,11 +128,11 @@ function showData(wea) {
                 props: {
                     id: "tomo_date",
                     font: $font("bold", 20),
-                    text: tomorrow_wea.date,
+                    text: tomorrow_wea.date.slice(5),
                 },
                 layout: function (make, view) {
                     make.left.equalTo(30)
-                    make.centerY.equalTo($("tmp_m")).offset(100)
+                    make.centerY.equalTo($("tmp_m")).offset(300)
                 }
             },
             {
@@ -148,8 +144,8 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.size.equalTo($size(30, 30))
-                    make.right.equalTo($("tomo_date").right).offset(90)
-                    make.centerY.equalTo($("tmp_m")).offset(100)
+                    make.right.equalTo($("tomo_date").right).offset(110)
+                    make.centerY.equalTo($("tomo_date"))
                 }
             },
             {
@@ -161,7 +157,7 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.right.equalTo($("tomo_image").right).offset(40)
-                    make.centerY.equalTo($("tmp_m")).offset(100)
+                    make.centerY.equalTo($("tomo_date"))
                 }
             },
             {
@@ -172,19 +168,19 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.right.equalTo(-20)
-                    make.centerY.equalTo($("tmp_m")).offset(100)
+                    make.centerY.equalTo($("tomo_date"))
                 }
             },
             {
                 type: "label",
                 props: {
-                    id: "tomo_date",
+                    id: "oth_date",
                     font: $font("bold", 20),
-                    text: other_wea.date,
+                    text: other_wea.date.slice(5),
                 },
                 layout: function (make, view) {
                     make.left.equalTo(30)
-                    make.centerY.equalTo($("tmp_m")).offset(150)
+                    make.centerY.equalTo($("tomo_date").bottom).offset(40)
                 }
             },
             {
@@ -196,8 +192,8 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.size.equalTo($size(30, 30))
-                    make.right.equalTo($("tomo_date").right).offset(90)
-                    make.centerY.equalTo($("tomo_date"))
+                    make.right.equalTo($("oth_date").right).offset(110)
+                    make.centerY.equalTo($("oth_date"))
                 }
             },
             {
@@ -209,7 +205,7 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.right.equalTo($("oth_image").right).offset(40)
-                    make.centerY.equalTo($("tomo_date"))
+                    make.centerY.equalTo($("oth_date"))
                 }
             },
             {
@@ -220,7 +216,7 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.right.equalTo(-20)
-                    make.centerY.equalTo($("tomo_date"))
+                    make.centerY.equalTo($("oth_date"))
                 }
             }
         ]
