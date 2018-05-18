@@ -45,8 +45,9 @@ function showData(wea) {
     var today_wea = daily_forecast["0"]
     var tomorrow_wea = daily_forecast["1"]
     var other_wea = daily_forecast["2"]
+    $console.log(wea)
 
-    $ui.toast("更新时间: " +  update_date)
+    $ui.toast("更新时间: " + update_date)
     $ui.render({
         props: {
             title: "和风天气"
@@ -132,7 +133,7 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.left.equalTo(30)
-                    make.centerY.equalTo($("tmp_m")).offset(300)
+                    make.centerY.equalTo($("tmp_m")).offset(100)
                 }
             },
             {
@@ -218,7 +219,7 @@ function showData(wea) {
                     make.right.equalTo(-20)
                     make.centerY.equalTo($("oth_date"))
                 }
-            }
+            },
         ]
     })
 }
