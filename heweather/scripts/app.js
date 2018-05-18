@@ -16,7 +16,7 @@ function getWeather(lat, lng) {
         handler: function (resp) {
             var data = resp.data
             if (data.HeWeather6[0].status == "ok") {
-                showData(data)
+                showData(lat, lng, data)
             } else {
                 $ui.alert({
                     title: "ERROR",
@@ -27,7 +27,7 @@ function getWeather(lat, lng) {
     })
 }
 
-function showData(wea) {
+function showData(lat, lng, wea) {
 
     // 接口基本数据
     var _basic = wea.HeWeather6[0].basic
@@ -133,7 +133,7 @@ function showData(wea) {
                 },
                 layout: function (make, view) {
                     make.left.equalTo(30)
-                    make.centerY.equalTo($("tmp_m")).offset(100)
+                    make.centerY.equalTo($("tmp_m")).offset(80)
                 }
             },
             {
@@ -220,6 +220,20 @@ function showData(wea) {
                     make.centerY.equalTo($("oth_date"))
                 }
             },
+            {
+                type: "map",
+                props: {
+                    location: {
+                        lat: lat,
+                        lng: lng
+                    }
+                },
+                layout: function (make, view) {
+                    make.left.equalTo(4)
+                    make.size.equalTo($size(view.super.frame.width - 8, 230))
+                    make.bottom.equalTo(-3)
+                }
+            }
         ]
     })
 }
