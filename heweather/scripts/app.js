@@ -48,72 +48,72 @@ function showToday(wea) {
     var today_wea = daily_forecast["0"]
     var tomorrow_wea = daily_forecast["1"]
     var other_wea = daily_forecast["2"]
-    
+
     $ui.render({
         props: {
             title: ""
         },
         views: [{
-            type: "image",
-            props: {
-                id: "image",
-                src: 'assets/' + cond_code + '.png',
-                bgcolor: $rgba(100, 100, 100, 0),
+                type: "image",
+                props: {
+                    id: "image",
+                    src: 'assets/' + cond_code + '.png',
+                    bgcolor: $rgba(100, 100, 100, 0),
+                },
+                layout: function (make, view) {
+                    make.top.equalTo()
+                    make.left.equalTo(30)
+                }
             },
-            layout: function (make, view) {
-                make.top.equalTo()
-                make.left.equalTo(30)
-            }
-        },
-        {
-            type: "label",
-            props: {
-                id: "tmp",
-                font: $font("bold", 50),
-                text: tmp + "℃",
+            {
+                type: "label",
+                props: {
+                    id: "tmp",
+                    font: $font("bold", 50),
+                    text: tmp + "℃",
+                },
+                layout: function (make, view) {
+                    make.top.equalTo(5)
+                    make.right.equalTo(-130)
+                }
             },
-            layout: function (make, view) {
-                make.top.equalTo(5)
-                make.right.equalTo(-130)
-            }
-        },
-        {
-            type: "label",
-            props: {
-                id: "tmp_m",
-                font: $font("bold", 17),
-                text: today_wea.tmp_min + "°" + " ~ " + today_wea.tmp_max + "°",
+            {
+                type: "label",
+                props: {
+                    id: "tmp_m",
+                    font: $font("bold", 17),
+                    text: today_wea.tmp_min + "°" + " ~ " + today_wea.tmp_max + "°",
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("tmp").bottom).offset(5)
+                    make.right.equalTo($("tmp").right)
+                }
             },
-            layout: function (make, view) {
-                make.top.equalTo($("tmp").bottom).offset(5)
-                make.right.equalTo($("tmp").right)
-            }
-        },
-        {
-            type: "label",
-            props: {
-                id: "wind",
-                font: $font("bold", 17),
-                text: "🌬" + wind_dir,
+            {
+                type: "label",
+                props: {
+                    id: "wind",
+                    font: $font("bold", 17),
+                    text: "🌬" + wind_dir,
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("tmp")).offset(20)
+                    make.right.equalTo(-30)
+                }
             },
-            layout: function (make, view) {
-                make.top.equalTo($("tmp")).offset(20)
-                make.right.equalTo(-30)
+            {
+                type: "label",
+                props: {
+                    id: "rain",
+                    font: $font("bold", 17),
+                    text: "💦 " + today_wea["pop"] + "%",
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("wind").bottom).offset(20)
+                    make.right.equalTo($("wind"))
+                }
             }
-        },
-        {
-            type: "label",
-            props: {
-                id: "rain",
-                font: $font("bold", 17),
-                text: "💦 " + today_wea["pop"] + "%",
-            },
-            layout: function (make, view) {
-                make.top.equalTo($("wind").bottom).offset(20)
-                make.right.equalTo($("wind"))
-            }
-        }
-    ]
+        ]
     })
 }
 
@@ -135,272 +135,285 @@ function showData(lat, lng, wea) {
     var tomorrow_wea = daily_forecast["1"]
     var other_wea = daily_forecast["2"]
 
-    $ui.toast("更新时间: " + update_date)
     $ui.render({
         props: {
             title: "和风天气",
         },
         views: [{
-                type: "label",
-                props: {
-                    id: "local",
-                    font: $font("bold", 20),
-                    text: parent_city + location,
-                },
-                layout: function (make, view) {
-                    make.top.equalTo(20)
-                    make.left.equalTo(50)
-                },
-                events: {
-                    tapped: function (sender) {
-                        $ui.push({
-                            props: {
-                                title: "地图"
-                            },
-                            views: [{
-                                type: "map",
+            type: "scroll",
+            props: {
+                alwaysBounceHorizontal: false,
+            },
+            layout: $layout.fill,
+            events:{
+                pulled: function (params) {
+                    getLocation()
+                    $("scroll").endRefreshing()
+                    $ui.toast("已刷新")
+                }
+            },
+            views: [{
+                    type: "label",
+                    props: {
+                        id: "local",
+                        font: $font("bold", 20),
+                        text: parent_city + location,
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo(20)
+                        make.left.equalTo(50)
+                    },
+                    events: {
+                        tapped: function (sender) {
+                            $ui.push({
                                 props: {
-                                    location: {
-                                        lat: lat,
-                                        lng: lng
-                                    }
+                                    title: "地图"
                                 },
-                                layout: $layout.fill
-                            }]
-                        })
+                                views: [{
+                                    type: "map",
+                                    props: {
+                                        location: {
+                                            lat: lat,
+                                            lng: lng
+                                        }
+                                    },
+                                    layout: $layout.fill
+                                }]
+                            })
+                        }
                     }
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "date",
-                    font: $font("bold", 20),
-                    text: update_date.slice(0, 10),
                 },
-                layout: function (make, view) {
-                    make.top.equalTo($("local"))
-                    make.right.equalTo(-40)
-                }
-            },
-            {
-                type: "image",
-                props: {
-                    id: "image",
-                    src: 'assets/' + cond_code + '.png',
-                    bgcolor: $rgba(100, 100, 100, 0),
+                {
+                    type: "label",
+                    props: {
+                        id: "date",
+                        font: $font("bold", 20),
+                        text: today_wea.date.slice(0, 10),
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo($("local"))
+                        make.centerX.equalTo(110)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo(-100)
-                    make.centerY.equalTo(-200)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "tmp",
-                    font: $font("bold", 75),
-                    text: tmp + "℃",
+                {
+                    type: "image",
+                    props: {
+                        id: "image",
+                        src: 'assets/' + cond_code + '.png',
+                        bgcolor: $rgba(100, 100, 100, 0),
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(-100)
+                        make.centerY.equalTo(-200)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo(50)
-                    make.centerY.equalTo(-200)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "wind",
-                    font: $font("bold", 17),
-                    text: "🌬" + wind_dir + "  " + wind_sc + "mph / 💦 " + today_wea["pop"] + "%",
+                {
+                    type: "label",
+                    props: {
+                        id: "tmp",
+                        font: $font("bold", 75),
+                        text: tmp + "℃",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(50)
+                        make.centerY.equalTo(-200)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo(0)
-                    make.centerY.equalTo($("tmp")).offset(80)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "tmp_m",
-                    font: $font("bold", 17),
-                    text: cond_text + "  " + today_wea.tmp_min + "°" + " ~ " + today_wea.tmp_max + "°",
+                {
+                    type: "label",
+                    props: {
+                        id: "wind",
+                        font: $font("bold", 17),
+                        text: "🌬" + wind_dir + "  " + wind_sc + "mph / 💦 " + today_wea["pop"] + "%",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(0)
+                        make.centerY.equalTo($("tmp")).offset(80)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo(0)
-                    make.centerY.equalTo($("wind")).offset(30)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "today_info_s",
-                    font: $font(18),
-                    text: "日出：" + today_wea.sr + "    " + "日落：" + today_wea.ss,
+                {
+                    type: "label",
+                    props: {
+                        id: "tmp_m",
+                        font: $font("bold", 17),
+                        text: cond_text + "  " + today_wea.tmp_min + "°" + " ~ " + today_wea.tmp_max + "°",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(0)
+                        make.centerY.equalTo($("wind")).offset(30)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo()
-                    make.centerY.equalTo($("tmp_m")).offset(50)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "today_info_m",
-                    font: $font(18),
-                    text: "月出：" + today_wea.mr + "    " + "月落：" + today_wea.ms,
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_s",
+                        font: $font(18),
+                        text: "日出：" + today_wea.sr + "    " + "日落：" + today_wea.ss,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("tmp_m")).offset(50)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo()
-                    make.centerY.equalTo($("today_info_s")).offset(30)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "today_info_c",
-                    font: $font(18),
-                    text: "日间：" + today_wea.cond_txt_d + "    " + "夜间：" + today_wea.cond_txt_n,
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_m",
+                        font: $font(18),
+                        text: "月出：" + today_wea.mr + "    " + "月落：" + today_wea.ms,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_s")).offset(30)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo()
-                    make.centerY.equalTo($("today_info_m")).offset(50)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "today_info_uv",
-                    font: $font(18),
-                    text: "紫外线强度指数：" + today_wea.uv_index,
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_c",
+                        font: $font(18),
+                        text: "日间：" + today_wea.cond_txt_d + "    " + "夜间：" + today_wea.cond_txt_n,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_m")).offset(50)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo()
-                    make.centerY.equalTo($("today_info_c")).offset(30)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "today_info_w",
-                    font: $font(18),
-                    text: "风力：" + today_wea.wind_sc + "级",
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_uv",
+                        font: $font(18),
+                        text: "紫外线强度指数：" + today_wea.uv_index,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_c")).offset(30)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo()
-                    make.centerY.equalTo($("today_info_uv")).offset(50)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "today_info_uv",
-                    font: $font(18),
-                    text: "相对湿度：" + today_wea.hum + "%",
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_w",
+                        font: $font(18),
+                        text: "风力：" + today_wea.wind_sc + "级",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_uv")).offset(50)
+                    }
                 },
-                layout: function (make, view) {
-                    make.centerX.equalTo()
-                    make.centerY.equalTo($("today_info_w")).offset(30)
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "tomo_date",
-                    font: $font("bold", 20),
-                    text: tomorrow_wea.date.slice(5),
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_uv",
+                        font: $font(18),
+                        text: "相对湿度：" + today_wea.hum + "%",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_w")).offset(30)
+                    }
                 },
-                layout: function (make, view) {
-                    make.left.equalTo(30)
-                    make.centerY.equalTo($("tmp_m")).offset(305)
-                }
-            },
-            {
-                type: "image",
-                props: {
-                    id: "tomo_image",
-                    src: 'assets/' + tomorrow_wea.cond_code_d + '.png',
-                    bgcolor: $rgba(100, 100, 100, 0),
+                {
+                    type: "label",
+                    props: {
+                        id: "tomo_date",
+                        font: $font("bold", 20),
+                        text: tomorrow_wea.date.slice(5),
+                    },
+                    layout: function (make, view) {
+                        make.left.equalTo(30)
+                        make.centerY.equalTo($("tmp_m")).offset(305)
+                    }
                 },
-                layout: function (make, view) {
-                    make.size.equalTo($size(30, 30))
-                    make.right.equalTo($("tomo_date").right).offset(110)
-                    make.centerY.equalTo($("tomo_date"))
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "tomo_cond",
-                    font: $font("bold", 20),
-                    text: tomorrow_wea.cond_txt_d,
+                {
+                    type: "image",
+                    props: {
+                        id: "tomo_image",
+                        src: 'assets/' + tomorrow_wea.cond_code_d + '.png',
+                        bgcolor: $rgba(100, 100, 100, 0),
+                    },
+                    layout: function (make, view) {
+                        make.size.equalTo($size(30, 30))
+                        make.right.equalTo($("tomo_date").right).offset(110)
+                        make.centerY.equalTo($("tomo_date"))
+                    }
                 },
-                layout: function (make, view) {
-                    make.right.equalTo($("tomo_image").right).offset(40)
-                    make.centerY.equalTo($("tomo_date"))
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    font: $font("bold", 17),
-                    text: tomorrow_wea.tmp_min + "°" + " ~ " + tomorrow_wea.tmp_max + "°",
+                {
+                    type: "label",
+                    props: {
+                        id: "tomo_cond",
+                        font: $font("bold", 20),
+                        text: tomorrow_wea.cond_txt_d,
+                    },
+                    layout: function (make, view) {
+                        make.right.equalTo($("tomo_image").right).offset(40)
+                        make.centerY.equalTo($("tomo_date"))
+                    }
                 },
-                layout: function (make, view) {
-                    make.right.equalTo(-20)
-                    make.centerY.equalTo($("tomo_date"))
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "oth_date",
-                    font: $font("bold", 20),
-                    text: other_wea.date.slice(5),
+                {
+                    type: "label",
+                    props: {
+                        font: $font("bold", 17),
+                        text: tomorrow_wea.tmp_min + "°" + " ~ " + tomorrow_wea.tmp_max + "°",
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo($("tomo_cond"))
+                        make.right.equalTo($("date"))
+                    }
                 },
-                layout: function (make, view) {
-                    make.left.equalTo(30)
-                    make.centerY.equalTo($("tomo_date").bottom).offset(40)
-                }
-            },
-            {
-                type: "image",
-                props: {
-                    id: "oth_image",
-                    src: 'assets/' + other_wea.cond_code_d + '.png',
-                    bgcolor: $rgba(100, 100, 100, 0),
+                {
+                    type: "label",
+                    props: {
+                        id: "oth_date",
+                        font: $font("bold", 20),
+                        text: other_wea.date.slice(5),
+                    },
+                    layout: function (make, view) {
+                        make.left.equalTo(30)
+                        make.centerY.equalTo($("tomo_date").bottom).offset(40)
+                    }
                 },
-                layout: function (make, view) {
-                    make.size.equalTo($size(30, 30))
-                    make.right.equalTo($("oth_date").right).offset(110)
-                    make.centerY.equalTo($("oth_date"))
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "tomo_cond",
-                    font: $font("bold", 20),
-                    text: other_wea.cond_txt_d,
+                {
+                    type: "image",
+                    props: {
+                        id: "oth_image",
+                        src: 'assets/' + other_wea.cond_code_d + '.png',
+                        bgcolor: $rgba(100, 100, 100, 0),
+                    },
+                    layout: function (make, view) {
+                        make.size.equalTo($size(30, 30))
+                        make.right.equalTo($("oth_date").right).offset(110)
+                        make.centerY.equalTo($("oth_date"))
+                    }
                 },
-                layout: function (make, view) {
-                    make.right.equalTo($("oth_image").right).offset(40)
-                    make.centerY.equalTo($("oth_date"))
-                }
-            },
-            {
-                type: "label",
-                props: {
-                    font: $font("bold", 17),
-                    text: other_wea.tmp_min + "°" + " ~ " + other_wea.tmp_max + "°",
+                {
+                    type: "label",
+                    props: {
+                        id: "oth_cond",
+                        font: $font("bold", 20),
+                        text: other_wea.cond_txt_d,
+                    },
+                    layout: function (make, view) {
+                        make.right.equalTo($("oth_image").right).offset(40)
+                        make.centerY.equalTo($("oth_date"))
+                    }
                 },
-                layout: function (make, view) {
-                    make.right.equalTo(-20)
-                    make.centerY.equalTo($("oth_date"))
-                }
-            },
+                {
+                    type: "label",
+                    props: {
+                        font: $font("bold", 17),
+                        text: other_wea.tmp_min + "°" + " ~ " + other_wea.tmp_max + "°",
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo($("oth_cond"))
+                        make.right.equalTo($("date"))
+                    }
+                },
 
-        ]
+            ]
+        }]
     })
 }
 
