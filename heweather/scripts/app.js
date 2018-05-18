@@ -50,7 +50,8 @@ function showData(lat, lng, wea) {
     $ui.toast("更新时间: " + update_date)
     $ui.render({
         props: {
-            title: "和风天气"
+            title: "和风天气",
+            bgcolor: $color("#F0FFF0")
         },
         views: [{
                 type: "label",
