@@ -16,10 +16,16 @@ function getId(vid) {
     $http.get({
         url: "http://magicapi.vmovier.com/magicapiv2/video/shareview?id=" + vid,
         handler: function (resp) {
-            $("progress").value = 0.5
             var data = resp.data
             playvideo(reTitle.exec(data)[1].slice(0, -5), reJpg.exec(data)[1], reMp4.exec(data)[0])
             $("progress").value = 1.0
+            $ui.animate({
+                duration: 1,
+                animation: function () {
+                    $("progress").alpha = 0
+                },
+                completion: function () {}
+            })
         }
     })
 }
@@ -73,7 +79,7 @@ function playvideo(videoTitle, videoJpg, videoMp4) {
                 },
                 events: {
                     tapped: function (params) {
-                        $("progress").value = 0.1
+                        $("progress").value = 0.4
                         getId(String(Math.random() * 10000).slice(0, 4))
                     }
                 }
