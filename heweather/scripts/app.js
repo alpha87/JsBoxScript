@@ -147,7 +147,7 @@ function showData(lat, lng, wea) {
                 pulled: function (params) {
                     getLocation()
                     $("scroll").endRefreshing()
-                    $ui.toast("已刷新", 0.5)
+                    $ui.toast("已刷新  " + update_date.slice(5), 0.5)
                 }
             },
             views: [{
