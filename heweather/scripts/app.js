@@ -15,6 +15,7 @@ function getWeather(lat, lng) {
         url: "https://free-api.heweather.com/s6/weather?location=" + lng + "," + lat + "&key=8fbe6ffd3b024bfba065104eaec87196",
         handler: function (resp) {
             var data = resp.data
+            $console.info(data)
             if (data.HeWeather6[0].status == "ok") {
                 if ($app.env == $env.today) {
                     showToday(data)
@@ -22,10 +23,7 @@ function getWeather(lat, lng) {
                     showData(lat, lng, data)
                 }
             } else {
-                $ui.alert({
-                    title: "ERROR",
-                    message: "请求失败!",
-                })
+                $ui.toast(data.HeWeather6[0].status.toUpperCase())
             }
         }
     })
@@ -145,11 +143,11 @@ function showData(lat, lng, wea) {
                 alwaysBounceHorizontal: false,
             },
             layout: $layout.fill,
-            events:{
+            events: {
                 pulled: function (params) {
                     getLocation()
                     $("scroll").endRefreshing()
-                    $ui.toast("已刷新")
+                    $ui.toast("已刷新", 0.5)
                 }
             },
             views: [{
@@ -418,5 +416,5 @@ function showData(lat, lng, wea) {
 }
 
 module.exports = {
-    init: getLocation
+    main: getLocation
 }
