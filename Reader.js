@@ -12,11 +12,6 @@ var dataSource = [{
         description: "聚焦新创和消费主题的科技媒体，成立于 2008 年 10 月，关注产品及体验，致力于“独立，前瞻，深入”的原创报道和分析评论，是国内唯一一家在产业和产品领域同时具有强势影响力的科技媒体。旗下现有 ifanr.com、SocialBase.cn、AppSolution、玩物志、创业及产品社区 MindStore 等多个细分领域的知名产品。",
         logo: "https://images.ifanr.cn/wp-content/themes/ifanr-4.0/static/images/ifanr/top-nav-down-logo.png"
     },
-    {
-        title: "好奇心日报",
-        description: "好奇心日报以商业视角观察生活并启发你的好奇心，囊括商业报道、科技新闻、生活方式等各个领域，致力成为这个时代最好的媒体，为用户提供最好的新闻资讯。",
-        logo: "https://is4-ssl.mzstatic.com/image/thumb/Purple128/v4/da/92/10/da92103b-3b43-4dce-599e-5350da400ded/AppIcon-1x_U007emarketing-0-85-220-3.png/230x0w.jpg"
-    }
 ]
 
 // 主视图列表模板
@@ -240,6 +235,11 @@ function otherPage(title) {
                     }
                 }
             }]
+        })
+    } else {
+        $ui.alert({
+            title: "",
+            message: "暂无内容",
         })
     }
 }
