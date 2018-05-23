@@ -15,7 +15,7 @@ var dataSource = [{
 ]
 
 // 主视图列表模板
-mainTemplate = [{
+var mainTemplate = [{
         type: "image",
         props: {
             id: "mainLogo",
@@ -54,7 +54,7 @@ mainTemplate = [{
 ]
 
 var sourceData = []
-for (source in dataSource) {
+for (var source in dataSource) {
     sourceData.push({
         mainLogo: {
             src: dataSource[source].logo
@@ -95,7 +95,7 @@ $ui.render({
 })
 
 // 内容列表模板
-articleTemplate = [{
+var articleTemplate = [{
         type: "image",
         props: {
             id: "articleImage",
@@ -155,7 +155,7 @@ function loadSspaiArticle(_page) {
         handler: function (resp) {
             let allData = resp.data
             let cdnUrl = "https://cdn.sspai.com/"
-            for (data in allData["list"]) {
+            for (var data in allData["list"]) {
                 let infors = allData["list"][data]
                 sspaiInfo.url = "https://sspai.com/" + infors["id"]
                 sspaiInfo.image = cdnUrl + infors["banner"]
