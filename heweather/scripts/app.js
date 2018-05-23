@@ -110,6 +110,102 @@ function showToday(wea) {
                     make.top.equalTo($("wind").bottom).offset(20)
                     make.right.equalTo($("wind"))
                 }
+            },
+            {
+                type: "label",
+                props: {
+                    id: "tomo_date",
+                    font: $font("bold", 20),
+                    text: tomorrow_wea.date.slice(5),
+                },
+                layout: function (make, view) {
+                    make.left.equalTo(30)
+                    make.top.equalTo($("rain").bottom).offset(35)
+                }
+            },
+            {
+                type: "image",
+                props: {
+                    id: "tomo_image",
+                    src: 'assets/' + tomorrow_wea.cond_code_d + '.png',
+                    bgcolor: $rgba(100, 100, 100, 0),
+                },
+                layout: function (make, view) {
+                    make.size.equalTo($size(30, 30))
+                    make.right.equalTo($("tomo_date").right).offset(100)
+                    make.centerY.equalTo($("tomo_date"))
+                }
+            },
+            {
+                type: "label",
+                props: {
+                    id: "tomo_cond",
+                    font: $font("bold", 20),
+                    text: tomorrow_wea.cond_txt_d,
+                },
+                layout: function (make, view) {
+                    make.right.equalTo($("tomo_image").right).offset(40)
+                    make.centerY.equalTo($("tomo_date"))
+                }
+            },
+            {
+                type: "label",
+                props: {
+                    font: $font("bold", 17),
+                    text: tomorrow_wea.tmp_min + "°" + " ~ " + tomorrow_wea.tmp_max + "°",
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("tomo_cond"))
+                    make.right.equalTo($("wind"))
+                }
+            },
+            {
+                type: "label",
+                props: {
+                    id: "oth_date",
+                    font: $font("bold", 20),
+                    text: other_wea.date.slice(5),
+                },
+                layout: function (make, view) {
+                    make.left.equalTo(30)
+                    make.centerY.equalTo($("tomo_date").bottom).offset(40)
+                }
+            },
+            {
+                type: "image",
+                props: {
+                    id: "oth_image",
+                    src: 'assets/' + other_wea.cond_code_d + '.png',
+                    bgcolor: $rgba(100, 100, 100, 0),
+                },
+                layout: function (make, view) {
+                    make.size.equalTo($size(30, 30))
+                    make.right.equalTo($("oth_date").right).offset(100)
+                    make.centerY.equalTo($("oth_date"))
+                }
+            },
+            {
+                type: "label",
+                props: {
+                    id: "oth_cond",
+                    font: $font("bold", 20),
+                    text: other_wea.cond_txt_d,
+                },
+                layout: function (make, view) {
+                    make.right.equalTo($("oth_image").right).offset(40)
+                    make.centerY.equalTo($("oth_date"))
+                }
+            },
+            {
+                type: "label",
+                props: {
+                    font: $font("bold", 17),
+                    text: other_wea.tmp_min + "°" + " ~ " + other_wea.tmp_max + "°",
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("oth_cond"))
+                    make.right.equalTo($("wind"))
+                }
             }
         ]
     })
@@ -409,7 +505,6 @@ function showData(lat, lng, wea) {
                         make.right.equalTo($("date"))
                     }
                 },
-
             ]
         }]
     })
