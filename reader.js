@@ -208,10 +208,11 @@ var sspaiInfo = {
 }
 
 var articleSspai = []
+var _page = 0
 
-function loadSspaiArticle() {
+function loadSspaiArticle(_page) {
     $http.get({
-        url: "https://sspai.com/api/v1/articles?offset=0&limit=10&type=recommend_to_home&sort=recommend_to_home_at&include_total=true",
+        url: "https://sspai.com/api/v1/articles?offset=" + _page + "&limit=10&type=recommend_to_home&sort=recommend_to_home_at&include_total=true",
         header: {
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"
         },
@@ -265,37 +266,40 @@ function loadSspaiArticle() {
 
 // 内容视图
 function otherPage(title) {
-    if (!articleSspai) {
-        $ui.alert({
-            title: "网络错误",
-            message: "请重试！",
-        })
-    } else {
-        $ui.loading(false)
-        $console.info(articleSspai)
-        if (title == "少数派") {
-            $ui.push({
+    $ui.loading(false)
+    if (title == "少数派") {
+        $device.taptic(0)
+        $ui.push({
+            props: {
+                title: title
+            },
+            views: [{
+                type: "list",
                 props: {
-                    title: title
+                    id: "articleList",
+                    rowHeight: 195,
+                    separatorInset: $insets(0, 10, 0, 10),
+                    template: articleTemplate,
+                    data: articleSspai,
                 },
-                views: [{
-                    type: "list",
-                    props: {
-                        id: "articleList",
-                        rowHeight: 195,
-                        separatorInset: $insets(0, 10, 0, 10),
-                        template: articleTemplate,
-                        data: articleSspai
+                layout: $layout.fill,
+                events: {
+                    didSelect: function (sender, indexPath, data) {
+                        getNews($("articleList").data[indexPath.row].articleUrl["url"])
                     },
-                    layout: $layout.fill,
-                    events: {
-                        didSelect: function (sender, indexPath, data) {
-                            getNews($("articleList").data[indexPath.row].articleUrl["url"])
-                        }
+                    didReachBottom: function (sender) {
+                        $ui.toast("加载中...")
+                        $device.taptic(0)
+                        sender.endFetchingMore()
+                        _page += 10
+                        loadSspaiArticle(_page)
+                        $("articleList").data.push(articleSspai)
+                        // 刷新展示列表
+                        $("articleList").data = articleSspai
                     }
-                }]
-            })
-        }
+                }
+            }]
+        })
     }
 }
 
@@ -312,7 +316,7 @@ function getNews(_url) {
             Body = data
             $ui.push({
                 props: {
-                    title: Title.slice(0, 9) + "..."
+                    title: Title.slice(0, 9) + " ..."
                 },
                 views: [{
                     type: "web",
