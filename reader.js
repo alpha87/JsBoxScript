@@ -92,8 +92,8 @@ $ui.render({
         layout: $layout.fill,
         events: {
             didSelect: function (sender, indexPath, data) {
-                $ui.loading("加载中...")
-                $delay(0.7, function () {
+                $ui.toast("加载中...")
+                $delay(1, function () {
                     otherPage($("mainList").data[indexPath.row].mainTitle.text)
                 })
             }
@@ -113,70 +113,14 @@ articleTemplate = [{
         }
     },
     {
-        type: "image",
-        props: {
-            id: "articleAuthorImage",
-            radius: 10,
-        },
-        layout: function (make) {
-            make.left.equalTo(5)
-            make.top.equalTo($("articleImage").bottom).offset(5)
-            make.size.equalTo($size(50, 50))
-        }
-    },
-    {
-        type: "label",
-        props: {
-            id: "articleAuthor",
-            font: $font("bold", 11),
-        },
-        layout: function (make) {
-            make.top.equalTo($("articleAuthorImage"))
-            make.left.equalTo($("articleAuthorImage").right).offset(10)
-        }
-    },
-    {
-        type: "label",
-        props: {
-            id: "articleDate",
-            font: $font(12),
-        },
-        layout: function (make) {
-            make.top.equalTo($("articleAuthor").bottom).offset(2)
-            make.left.equalTo($("articleAuthor"))
-        }
-    },
-    {
-        type: "label",
-        props: {
-            id: "articleLike",
-            font: $font(10),
-        },
-        layout: function (make) {
-            make.top.equalTo($("articleDate").bottom).offset(5)
-            make.left.equalTo($("articleAuthor")).offset(-3)
-        }
-    },
-    {
-        type: "label",
-        props: {
-            id: "articleComment",
-            font: $font(10),
-        },
-        layout: function (make) {
-            make.top.equalTo($("articleLike"))
-            make.left.equalTo($("articleLike").right).offset(2)
-        },
-    },
-    {
         type: "label",
         props: {
             id: "articleTitle",
-            font: $font("bold", 14),
+            font: $font("bold", 15),
         },
         layout: function (make) {
-            make.top.equalTo($("articleAuthor"))
-            make.left.equalTo($("articleAuthor").right).offset(5)
+            make.top.equalTo($("articleImage").bottom).offset(5)
+            make.left.right.inset(10)
         }
     },
     {
@@ -187,9 +131,8 @@ articleTemplate = [{
             font: $font(12),
         },
         layout: function (make) {
-            make.top.equalTo($("articleTitle").bottom).offset(5)
-            make.left.equalTo($("articleTitle"))
-            make.right.inset(5)
+            make.top.equalTo($("articleTitle").bottom).offset(2)
+            make.left.right.inset(10)
         }
     }
 ]
@@ -277,7 +220,7 @@ function otherPage(title) {
                 type: "list",
                 props: {
                     id: "articleList",
-                    rowHeight: 195,
+                    rowHeight: 190,
                     separatorInset: $insets(0, 10, 0, 10),
                     template: articleTemplate,
                     data: articleSspai,
@@ -289,13 +232,13 @@ function otherPage(title) {
                     },
                     didReachBottom: function (sender) {
                         $ui.toast("加载中...")
-                        $device.taptic(0)
                         sender.endFetchingMore()
                         _page += 10
                         loadSspaiArticle(_page)
                         $("articleList").data.push(articleSspai)
                         // 刷新展示列表
                         $("articleList").data = articleSspai
+                        $device.taptic(0)
                     }
                 }
             }]
