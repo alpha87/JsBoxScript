@@ -253,8 +253,7 @@ function getNews(_url) {
         },
         handler: function (resp) {
             var data = resp.data
-            Title = reTitle.exec(data)[1]
-            Body = data
+            var Title = reTitle.exec(data)[1]
             $ui.push({
                 props: {
                     title: Title.slice(0, 9) + " ..."
