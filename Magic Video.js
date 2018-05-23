@@ -22,7 +22,7 @@ function getId(vid) {
             $ui.animate({
                 duration: 1,
                 animation: function () {
-                    $("progress").alpha = 0
+                    $("progress").alpha = 0;
                 },
                 completion: function () {}
             })
@@ -79,8 +79,9 @@ function playvideo(videoTitle, videoJpg, videoMp4) {
                 },
                 events: {
                     tapped: function (params) {
-                        $("progress").value = 0.4
-                        getId(String(Math.random() * 10000).slice(0, 4))
+                        $("progress").value = 0.4;
+                        $ui.loading(true);
+                        getId(String(Math.random() * 10000).slice(0, 4));
                     }
                 }
             },
