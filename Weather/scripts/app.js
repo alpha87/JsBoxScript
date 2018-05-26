@@ -260,7 +260,6 @@ function showData(wea) {
                     type: "image",
                     props: {
                         id: "local_png",
-                        icon: $icon("005", $color("red"), $size(20, 20)),
                         bgcolor: $rgba(100, 100, 100, 0),
                         src: "assets/icon_007.png"
                     },
