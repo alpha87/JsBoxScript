@@ -1,4 +1,6 @@
-$ui.loading("加载中...")
+if ($app.env !== $env.today) {
+    $ui.loading("加载中...")
+}
 
 // 获取当地经纬度
 function getLocation() {
@@ -17,7 +19,6 @@ function getWeather(lat, lng) {
         url: "https://free-api.heweather.com/s6/weather?location=" + lng + "," + lat + "&key=8fbe6ffd3b024bfba065104eaec87196",
         handler: function (resp) {
             var data = resp.data
-            $console.info(data)
             if (data.HeWeather6[0].status == "ok") {
                 if ($app.env == $env.today) {
                     showToday(data)
@@ -31,6 +32,22 @@ function getWeather(lat, lng) {
     })
 }
 
+// 获取制定位置API数据
+function getLocWeather(text) {
+    $http.get({
+        url: "https://free-api.heweather.com/s6/weather?location="+encodeURI(text)+"&key=8fbe6ffd3b024bfba065104eaec87196",
+        handler: function (resp) {
+            var data = resp.data
+            if (data.HeWeather6[0].status == "ok") {
+                showData(data)
+            } else {
+                $ui.toast(data.HeWeather6[0].status.toUpperCase())
+            }
+        }
+    })
+}
+
+// Today 视图
 function showToday(wea) {
 
     var _basic = wea.HeWeather6[0].basic
@@ -244,12 +261,17 @@ function showData(wea) {
                     props: {
                         id: "local",
                         font: $font("bold", 16),
-                        text: parent_city + location,
+                        text: parent_city !== location ? parent_city + location : parent_city,
                     },
                     layout: function (make, view) {
                         make.top.equalTo(20)
                         make.left.equalTo(50)
                     },
+                    events: {
+                        tapped: function (sender) {
+                            newWeather()
+                        }
+                    }
                 },
                 {
                     type: "label",
@@ -268,6 +290,7 @@ function showData(wea) {
                     props: {
                         radius: 18,
                         bgcolor: $color("#F0FFF0"),
+                        showsVerticalIndicator: false,
                         alwaysBounceHorizontal: false,
                     },
                     layout: function (make, view) {
@@ -277,6 +300,7 @@ function showData(wea) {
                     },
                     events: {
                         pulled: function (params) {
+                            $console.info(params)
                             getLocation()
                             $("scroll").endRefreshing()
                             $device.taptic(0)
@@ -503,6 +527,46 @@ function showData(wea) {
                             }
                         },
                     ]
+                }
+            ]
+        }]
+    })
+}
+
+function newWeather() {
+    $ui.push({
+        props: {
+            title: "搜索"
+        },
+        views: [{
+            type: "view",
+            props: {
+                id: ""
+            },
+            layout: $layout.fill,
+            views: [
+                {
+                    type: "input",
+                    props: {
+                        placeholder: "输入地区查询",
+                        radius: 15,
+                    },
+                    layout: function (make) {
+                        make.top.equalTo(15)
+                        make.height.equalTo(40)
+                        make.left.right.inset(20)  
+                    },
+                    events: {
+                        returned: function (sender) {
+                            $ui.pop()
+                            $ui.animate({
+                                duration: 0.3,
+                                animation: function() {
+                                  $("scroll").alpha = 0
+                                }})
+                            getLocWeather(sender.text)
+                        }
+                    }
                 }
             ]
         }]
