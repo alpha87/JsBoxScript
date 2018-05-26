@@ -23,7 +23,7 @@ function getWeather(lat, lng) {
                 if ($app.env == $env.today) {
                     showToday(data)
                 } else {
-                    showData(data)
+                    showData(false, data)
                 }
             } else {
                 $ui.toast(data.HeWeather6[0].status.toUpperCase())
@@ -39,7 +39,7 @@ function getLocWeather(text) {
         handler: function (resp) {
             var data = resp.data
             if (data.HeWeather6[0].status == "ok") {
-                showData(data)
+                showData(text, data)
             } else {
                 $ui.toast(data.HeWeather6[0].status.toUpperCase())
             }
@@ -230,7 +230,7 @@ function showToday(wea) {
     })
 }
 
-function showData(wea) {
+function showData(text, wea) {
     // 接口基本数据
     var _basic = wea.HeWeather6[0].basic
     var parent_city = _basic.parent_city
@@ -319,7 +319,11 @@ function showData(wea) {
                     },
                     events: {
                         pulled: function (params) {
-                            getLocation()
+                            if (text) {
+                                getLocWeather(text)
+                            } else {
+                                getLocation()
+                            }
                             $("scroll").endRefreshing()
                             $device.taptic(0)
                             $ui.toast("已刷新  " + update_date.slice(5), 0.5)
@@ -552,7 +556,6 @@ function showData(wea) {
 }
 
 function newWeather() {
-    // loc_title = $cache.get("_loc").text || false
     $ui.push({
         props: {
             title: "搜索"
@@ -571,7 +574,20 @@ function newWeather() {
                 },
                 events: {
                     returned: function (sender) {
-                        // $cache.set("_loc", sender.text)
+                        var _text = sender.text
+                        matView.insert({
+                            index: 0,
+                            value: {
+                                loc_title: {
+                                    text: _text
+                                }
+                            }
+                        })
+                        $cache.set("key", [{
+                            loc_title: {
+                                text: _text
+                            }
+                        }])
                         $ui.pop()
                         $ui.animate({
                             duration: 0.3,
@@ -595,32 +611,62 @@ function newWeather() {
                 views: [{
                     type: "matrix",
                     props: {
-                        id: "mat_",
-                        columns: 4,
-                        itemHeight: 88,
-                        spacing: 30,
-                        // data: [{}],
+                        columns: 3,
+                        itemHeight: 40,
+                        spacing: 25,
+                        data: [{
+                            loc_title: {
+                                text: "定位"
+                            }
+                        }],
                         template: {
                             views: [{
                                 type: "label",
                                 props: {
                                     id: "loc_title",
-                                    radius: 18,
-                                    bgcolor: $objc("UIColor").invoke("blackColor").rawValue(),
-                                    textColor: $color("#FFFFFF").runtimeValue().rawValue(),
+                                    radius: 15,
+                                    bgcolor: $color("tint"),
+                                    textColor: $color("white"),
                                     align: $align.center,
-                                    font: $font(18),
+                                    font: $font(20),
                                 },
-                                layout: $layout.fill,
+                                layout: $layout.fill
                             }]
                         },
                     },
-                    layout: $layout.fill
+                    layout: $layout.fill,
+                    events: {
+                        didSelect: function (sender, indexPath, data) {
+                            if (data == "定位") {
+                                $ui.pop()
+                                $ui.animate({
+                                    duration: 0.3,
+                                    animation: function () {
+                                        $("scroll").alpha = 0
+                                    }
+                                })
+                                $ui.toast("查询中...", 3)
+                                getLocation()
+                            } else {
+                                $ui.pop()
+                                $ui.animate({
+                                    duration: 0.3,
+                                    animation: function () {
+                                        $("scroll").alpha = 0
+                                    }
+                                })
+                                $ui.toast("查询中...", 3)
+                                getLocWeather(data)
+                            }
+                        }
+                    }
                 }]
             },
         ]
     })
-
+    var matView = $("matrix")
+    var locData = $cache.get("key") || []
+    matView.data = locData
 }
 
 module.exports = {
