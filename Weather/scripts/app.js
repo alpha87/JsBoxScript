@@ -35,7 +35,7 @@ function getWeather(lat, lng) {
 // 获取制定位置API数据
 function getLocWeather(text) {
     $http.get({
-        url: "https://free-api.heweather.com/s6/weather?location="+encodeURI(text)+"&key=8fbe6ffd3b024bfba065104eaec87196",
+        url: "https://free-api.heweather.com/s6/weather?location=" + encodeURI(text) + "&key=8fbe6ffd3b024bfba065104eaec87196",
         handler: function (resp) {
             var data = resp.data
             if (data.HeWeather6[0].status == "ok") {
@@ -257,6 +257,20 @@ function showData(wea) {
             props: {},
             layout: $layout.fill,
             views: [{
+                    type: "image",
+                    props: {
+                        id: "local_png",
+                        icon: $icon("005", $color("red"), $size(20, 20)),
+                        bgcolor: $rgba(100, 100, 100, 0),
+                        src: "assets/icon_007.png"
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo(20)
+                        make.left.equalTo(55)
+                        make.size.equalTo($size(18, 18))
+                    }
+                },
+                {
                     type: "label",
                     props: {
                         id: "local",
@@ -264,8 +278,8 @@ function showData(wea) {
                         text: parent_city !== location ? parent_city + location : parent_city,
                     },
                     layout: function (make, view) {
-                        make.top.equalTo(20)
-                        make.left.equalTo(50)
+                        make.top.equalTo($("local_png"))
+                        make.left.equalTo($("local_png")).offset(20)
                     },
                     events: {
                         tapped: function (sender) {
@@ -544,31 +558,30 @@ function newWeather() {
                 id: ""
             },
             layout: $layout.fill,
-            views: [
-                {
-                    type: "input",
-                    props: {
-                        placeholder: "输入地区查询",
-                        radius: 15,
-                    },
-                    layout: function (make) {
-                        make.top.equalTo(15)
-                        make.height.equalTo(40)
-                        make.left.right.inset(20)  
-                    },
-                    events: {
-                        returned: function (sender) {
-                            $ui.pop()
-                            $ui.animate({
-                                duration: 0.3,
-                                animation: function() {
-                                  $("scroll").alpha = 0
-                                }})
-                            getLocWeather(sender.text)
-                        }
+            views: [{
+                type: "input",
+                props: {
+                    placeholder: "输入地区查询",
+                    radius: 15,
+                },
+                layout: function (make) {
+                    make.top.equalTo(15)
+                    make.height.equalTo(40)
+                    make.left.right.inset(20)
+                },
+                events: {
+                    returned: function (sender) {
+                        $ui.pop()
+                        $ui.animate({
+                            duration: 0.3,
+                            animation: function () {
+                                $("scroll").alpha = 0
+                            }
+                        })
+                        getLocWeather(sender.text)
                     }
                 }
-            ]
+            }]
         }]
     })
 }
