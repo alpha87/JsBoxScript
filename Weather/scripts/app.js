@@ -283,6 +283,12 @@ function showData(wea) {
                     events: {
                         tapped: function (sender) {
                             newWeather()
+                        },
+                        longPressed: function (sender) {
+                            $ui.alert({
+                                title: "PHOTO",
+                                message: "查看实景图",
+                            })
                         }
                     }
                 },
@@ -313,7 +319,6 @@ function showData(wea) {
                     },
                     events: {
                         pulled: function (params) {
-                            $console.info(params)
                             getLocation()
                             $("scroll").endRefreshing()
                             $device.taptic(0)
@@ -547,29 +552,26 @@ function showData(wea) {
 }
 
 function newWeather() {
+    // loc_title = $cache.get("_loc").text || false
     $ui.push({
         props: {
             title: "搜索"
         },
         views: [{
-            type: "view",
-            props: {
-                id: ""
-            },
-            layout: $layout.fill,
-            views: [{
                 type: "input",
                 props: {
+                    id: "loc_input",
                     placeholder: "输入地区查询",
                     radius: 15,
                 },
                 layout: function (make) {
                     make.top.equalTo(15)
-                    make.height.equalTo(40)
+                    make.height.equalTo(35)
                     make.left.right.inset(20)
                 },
                 events: {
                     returned: function (sender) {
+                        // $cache.set("_loc", sender.text)
                         $ui.pop()
                         $ui.animate({
                             duration: 0.3,
@@ -577,12 +579,48 @@ function newWeather() {
                                 $("scroll").alpha = 0
                             }
                         })
+                        $ui.toast("查询中...", 3)
                         getLocWeather(sender.text)
                     }
                 }
-            }]
-        }]
+            },
+            {
+                type: "view",
+                props: {},
+                layout: function (make, view) {
+                    make.top.equalTo($("loc_input").bottom).offset(10)
+                    make.center.equalTo(view.super)
+                    make.size.equalTo($size(view.super.frame.width - 20, 400))
+                },
+                views: [{
+                    type: "matrix",
+                    props: {
+                        id: "mat_",
+                        columns: 4,
+                        itemHeight: 88,
+                        spacing: 30,
+                        // data: [{}],
+                        template: {
+                            views: [{
+                                type: "label",
+                                props: {
+                                    id: "loc_title",
+                                    radius: 18,
+                                    bgcolor: $objc("UIColor").invoke("blackColor").rawValue(),
+                                    textColor: $color("#FFFFFF").runtimeValue().rawValue(),
+                                    align: $align.center,
+                                    font: $font(18),
+                                },
+                                layout: $layout.fill,
+                            }]
+                        },
+                    },
+                    layout: $layout.fill
+                }]
+            },
+        ]
     })
+
 }
 
 module.exports = {
