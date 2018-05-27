@@ -7,4 +7,3 @@ if ($app.env !== $env.today) {
 } else {
     todayApp.main()
 }
-
