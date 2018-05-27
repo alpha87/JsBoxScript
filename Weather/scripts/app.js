@@ -493,7 +493,7 @@ function showPhoto() {
             props: {
                 id: "photoList",
                 interval: 2,
-                radius: 15,
+                radius: 8,
                 items: [{
                         type: "image",
                         props: {
@@ -527,7 +527,7 @@ function showPhoto() {
                 ]
             },
             layout: function (make, view) {
-                make.left.top.right.bottom.inset(15)
+                make.left.top.right.bottom.inset(10)
             }
         }]
     })
