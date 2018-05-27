@@ -587,6 +587,10 @@ function newWeather() {
                             loc_title: {
                                 text: _text
                             }
+                        }, {
+                            loc_title: {
+                                text: "定位"
+                            }
                         }])
                         $ui.pop()
                         $ui.animate({
@@ -614,11 +618,6 @@ function newWeather() {
                         columns: 3,
                         itemHeight: 40,
                         spacing: 25,
-                        data: [{
-                            loc_title: {
-                                text: "定位"
-                            }
-                        }],
                         template: {
                             views: [{
                                 type: "label",
@@ -637,7 +636,7 @@ function newWeather() {
                     layout: $layout.fill,
                     events: {
                         didSelect: function (sender, indexPath, data) {
-                            if (data == "定位") {
+                            if (indexPath.row == 1) {
                                 $ui.pop()
                                 $ui.animate({
                                     duration: 0.3,
@@ -645,9 +644,9 @@ function newWeather() {
                                         $("scroll").alpha = 0
                                     }
                                 })
-                                $ui.toast("查询中...", 3)
+                                $ui.toast("查询当地天气...", 2)
                                 getLocation()
-                            } else {
+                            } else if (indexPath.row == 0) {
                                 $ui.pop()
                                 $ui.animate({
                                     duration: 0.3,
@@ -655,8 +654,8 @@ function newWeather() {
                                         $("scroll").alpha = 0
                                     }
                                 })
-                                $ui.toast("查询中...", 3)
-                                getLocWeather(data)
+                                $ui.toast("查询中...", 2)
+                                getLocWeather(data.loc_title.text)
                             }
                         }
                     }
