@@ -1,6 +1,8 @@
 // 存放实景图链接
 var photoUrl = []
 
+$app.tips("点击地区查询其他地区天气\n长按查看天气所在地实景图")
+
 // 获取当地经纬度
 function getLocation() {
     $location.fetch({
@@ -115,6 +117,30 @@ function showData(text, wea) {
                     layout: function (make, view) {
                         make.top.equalTo($("local"))
                         make.right.inset(50)
+                    }
+                },
+                {
+                    type: "button",
+                    props: {
+                        id: "settings",
+                        icon: $icon("002", $color("#F5F5F5"), $size(20, 20)),
+                        bgcolor: $color("clear"),
+                    },
+                    layout: function (make, view) {
+                        make.right.inset(80)
+                        make.bottom.inset(20)
+                    }
+                },
+                {
+                    type: "button",
+                    props: {
+                        id: "feedback",
+                        icon: $icon("030", $color("#F5F5F5"), $size(20, 20)),
+                        bgcolor: $color("clear"),
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo($("settings"))
+                        make.right.inset(30)
                     }
                 },
                 {
