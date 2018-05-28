@@ -1,3 +1,6 @@
+// 版本号
+var __version = "v1.0";
+
 // 存放实景图链接
 var photoUrl = []
 
@@ -129,6 +132,11 @@ function showData(text, wea) {
                     layout: function (make, view) {
                         make.right.inset(80)
                         make.bottom.inset(20)
+                    },
+                    events: {
+                        tapped: function (sender) {
+                            weatherSettings()
+                        }
                     }
                 },
                 {
@@ -141,27 +149,32 @@ function showData(text, wea) {
                     layout: function (make, view) {
                         make.top.equalTo($("settings"))
                         make.right.inset(30)
+                    },
+                    events: {
+                        tapped: function (sender) {
+                            $system.mailto("jianxun2004@gmail.com")
+                        }
                     }
                 },
                 {
                     type: "scroll",
                     props: {
                         radius: 18,
-                        bgcolor: $color("#F0FFF0"),
+                        bgcolor: $cache.get("scrollColor") == undefined ? $color("#F5FFFA") : $cache.get("scrollColor").color,
                         showsVerticalIndicator: false,
                         alwaysBounceHorizontal: false,
                     },
                     layout: function (make, view) {
                         make.top.equalTo($("local").bottom).offset(20)
                         make.size.equalTo($size(360, 550))
-                        make.centerX.equalTo()
+                        make.centerX.equalTo();
                     },
                     events: {
                         pulled: function (params) {
                             if (text) {
-                                getLocWeather(text)
+                                getLocWeather(text);
                             } else {
-                                getLocation()
+                                getLocation();
                             }
                             $("scroll").endRefreshing()
                             $device.taptic(0)
@@ -653,6 +666,95 @@ function getPhoto(locationTitle) {
             })
         }
     })
+}
+
+
+// 设置界面
+function weatherSettings() {
+    $ui.push({
+        props: {
+            title: "设定"
+        },
+        views: [{
+            type: "list",
+            props: {
+                data: [{
+                        title: "主题",
+                        rows: ["跟随JSBox", "自定义", "随机"]
+                    },
+                    {
+                        title: "其他",
+                        rows: ["清理缓存"]
+                    },
+                    {
+                        title: "版本号 " + __version,
+                        rows: ["检查更新"]
+                    }
+                ]
+            },
+            layout: $layout.fill,
+            events: {
+                didSelect: function (sender, indexPath, data) {
+                    if (data == "跟随JSBox") {
+                        $cache.set("scrollColor", {
+                            color: $color("tint")
+                        })
+                        updateColorAlert()
+                    } else if (data == "自定义") {
+                        $input.text({
+                            type: $kbType.ascii,
+                            placeholder: "输入十六进制颜色代码",
+                            handler: function (text) {
+                                $cache.set("scrollColor", {
+                                    color: $color(text)
+                                })
+                                updateColorAlert()
+                            }
+                        })
+                    } else if (data == "随机") {
+                        c = getRandomColor()
+                        $cache.set("scrollColor", {
+                            color: $color(c)
+                        })
+                        updateColorAlert()
+                    } else if (data == "清理缓存") {
+                        $cache.remove("scrollColor")
+                        $ui.toast("已清除", 2)
+                    } else if (data == "检查更新") {
+                    }
+                }
+            }
+        }]
+    })
+}
+
+// 更新主题色alert
+function updateColorAlert() {
+    $ui.pop()
+    $ui.alert({
+        message: "更新主题色",
+        actions: [{
+                title: "手动重启",
+                handler: function (sender) {
+                    $app.close()
+                }
+            },
+            {
+                title: "暂不重启"
+            }
+        ]
+    })
+}
+
+// 随机生成十六进制颜色
+function getRandomColor() {
+    var colorElements = "0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f";
+    var colorArray = colorElements.split(",");
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+        color += colorArray[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
 
 module.exports = {
