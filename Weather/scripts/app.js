@@ -408,12 +408,19 @@ function showData(text, wea) {
 }
 
 // 展示输入位置天气
+
+/* 
+TODO 
+热门城市用matrix展示
+缓存查询城市用列表展示
+*/
 function newWeather() {
     $ui.push({
         props: {
             title: "搜索"
         },
-        views: [{
+        views: [
+            {
                 type: "input",
                 props: {
                     id: "loc_input",
@@ -458,10 +465,22 @@ function newWeather() {
                 }
             },
             {
-                type: "view",
-                props: {},
-                layout: function (make, view) {
+                type: "label",
+                props: {
+                    text: "热门城市",
+                    textColor: $color("gray"),
+                },
+                layout: function (make) {
                     make.top.equalTo($("loc_input").bottom).offset(10)
+                    make.left.equalTo(25)
+                }
+            },
+            {
+                type: "view",
+                props: {
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("loc_input").bottom).offset(40)
                     make.center.equalTo(view.super)
                     make.size.equalTo($size(view.super.frame.width - 20, 400))
                 },
