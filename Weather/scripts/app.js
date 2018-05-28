@@ -668,7 +668,6 @@ function getPhoto(locationTitle) {
     })
 }
 
-
 // 设置界面
 function weatherSettings() {
     $ui.push({
@@ -721,11 +720,42 @@ function weatherSettings() {
                         $cache.remove("scrollColor")
                         $ui.toast("已清除", 2)
                     } else if (data == "检查更新") {
+                        $ui.loading(true)
                         $http.get({
                             url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/Weather/version.json",
-                            handler: function(resp) {
+                            handler: function (resp) {
                                 var data = resp.data
-                                $console.info(data)
+                                oldVersion = data['version']
+                                infors = data['informations']
+                                if (oldVersion !== __version) {
+                                    $device.taptic(0)
+                                    $ui.alert({
+                                        title: "有新版本",
+                                        message: infors.length > 12 ? infors.slice(0, 12) + "..." : infors,
+                                        actions: [{
+                                                title: "立即更新",
+                                                handler: function (sender) {
+                                                    $safari.open({
+                                                        url: "https://jsboxbbs.com/"
+                                                    })
+                                                },
+                                            },
+                                            {
+                                                title: "暂不更新"
+                                            }
+                                        ]
+                                    })
+                                } else {
+                                    $ui.alert({
+                                        title: "暂无更新",
+                                        actions: [{
+                                            title: "好的",
+                                            handler: function () {
+                                                $ui.loading(false)
+                                            }
+                                        }]
+                                    })
+                                }
                             }
                         })
                     }
