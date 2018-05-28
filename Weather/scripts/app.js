@@ -721,6 +721,13 @@ function weatherSettings() {
                         $cache.remove("scrollColor")
                         $ui.toast("已清除", 2)
                     } else if (data == "检查更新") {
+                        $http.get({
+                            url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/Weather/version.json",
+                            handler: function(resp) {
+                                var data = resp.data
+                                $console.info(data)
+                            }
+                        })
                     }
                 }
             }

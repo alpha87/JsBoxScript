@@ -1,8 +1,7 @@
 {
-    "info": {
-        "url": "",
-        "version": "v1.0",
-        "informations": "这是一款简单的天气APP。",
-        "author": "Jianxun"
-    }
+    "url": "",
+    "version": "v1.0",
+    "informations": "这是一款简单的天气APP。",
+    "author": "Jianxun"
+
 }
