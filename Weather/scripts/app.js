@@ -77,8 +77,7 @@ function showData(text, wea) {
             type: "views",
             props: {},
             layout: $layout.fill,
-            views: [
-                {
+            views: [{
                     type: "label",
                     props: {
                         id: "local",
@@ -691,6 +690,37 @@ function showPhoto() {
             },
             layout: function (make, view) {
                 make.left.top.right.bottom.inset(10)
+            },
+            events: {
+                tapped: function (sender, indexPath, data) {
+                    $ui.menu({
+                        items: ["查看更多"],
+                        handler: function (title, idx) {
+                            if (idx == 0) {
+                                showMorePhoto()
+                            }
+                        }
+                    })
+                }
+            }
+        }]
+    })
+}
+
+// 查看更多实景图
+function showMorePhoto() {
+
+    $ui.push({
+        props: {
+            title: "More"
+        },
+        views: [{
+            type: "spinner",
+            props: {
+                loading: true
+            },
+            layout: function (make, view) {
+                make.center.equalTo(view.super)
             }
         }]
     })
@@ -773,7 +803,7 @@ function getPhoto(locationTitle) {
                     },
                     "params": {
                         "type": 0,
-                        "page_length": 5,
+                        "page_length": 30,
                         "latitude": 0,
                         "longitude": 0,
                         "city_id": __id,
