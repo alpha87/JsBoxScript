@@ -126,7 +126,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "settings",
-                        icon: $icon("129", $color("#F5F5F5"), $size(20, 20)),
+                        icon: $icon("129", $color("#F5F5F5"), $size(30, 30)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -143,7 +143,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "feedback",
-                        icon: $icon("030", $color("#F5F5F5"), $size(20, 20)),
+                        icon: $icon("030", $color("#F5F5F5"), $size(30, 30)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -160,7 +160,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "tts",
-                        icon: $icon("049", $color("#F5F5F5"), $size(20, 20)),
+                        icon: $icon("049", $color("#F5F5F5"), $size(30, 30)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -435,6 +435,7 @@ TODO
 缓存查询城市用列表展示
 */
 function newWeather() {
+    var __width = $device.info["screen"]["width"] - 50
     $ui.push({
         props: {
             title: "搜索"
@@ -454,23 +455,7 @@ function newWeather() {
                 events: {
                     returned: function (sender) {
                         var _text = sender.text
-                        matView.insert({
-                            index: 0,
-                            value: {
-                                loc_title: {
-                                    text: _text
-                                }
-                            }
-                        })
-                        $cache.set("key", [{
-                            loc_title: {
-                                text: _text
-                            }
-                        }, {
-                            loc_title: {
-                                text: "定位"
-                            }
-                        }])
+                        // todo 加入列表缓存
                         $ui.pop()
                         $ui.animate({
                             duration: 0.3,
@@ -486,6 +471,7 @@ function newWeather() {
             {
                 type: "label",
                 props: {
+                    id: "label_city",
                     text: "热门城市",
                     textColor: $color("gray"),
                 },
@@ -495,67 +481,112 @@ function newWeather() {
                 }
             },
             {
-                type: "view",
-                props: {},
-                layout: function (make, view) {
-                    make.top.equalTo($("loc_input").bottom).offset(40)
-                    make.center.equalTo(view.super)
-                    make.size.equalTo($size(view.super.frame.width - 20, 400))
-                },
-                views: [{
-                    type: "matrix",
-                    props: {
-                        columns: 3,
-                        itemHeight: 40,
-                        spacing: 25,
-                        template: {
-                            views: [{
-                                type: "label",
-                                props: {
-                                    id: "loc_title",
-                                    radius: 15,
-                                    bgcolor: $color("tint"),
-                                    textColor: $color("white"),
-                                    align: $align.center,
-                                    font: $font(20),
-                                },
-                                layout: $layout.fill
-                            }]
-                        },
+
+                type: "matrix",
+                props: {
+                    columns: 3,
+                    itemHeight: 40,
+                    spacing: 26,
+                    data: [{
+                        loc_title: {
+                            text: "定位"
+                        }
+                    }, {
+                        loc_title: {
+                            text: "北京"
+                        }
+                    }, {
+                        loc_title: {
+                            text: "上海"
+                        }
+                    }, {
+                        loc_title: {
+                            text: "太原"
+                        }
+                    }, {
+                        loc_title: {
+                            text: "深圳"
+                        }
+                    }, {
+                        loc_title: {
+                            text: "杭州"
+                        }
+                    }, {
+                        loc_title: {
+                            text: "成都"
+                        }
+                    }, {
+                        loc_title: {
+                            text: "天津"
+                        }
+                    }, ],
+                    template: {
+                        views: [{
+                            type: "label",
+                            props: {
+                                id: "loc_title",
+                                radius: 15,
+                                bgcolor: $cache.get("scrollColor") == undefined ? $color("#F5FFFA") : $cache.get("scrollColor").color,
+                                textColor: $color("tint"),
+                                align: $align.center,
+                                font: $font(20),
+                            },
+                            layout: $layout.fill
+                        }]
                     },
-                    layout: $layout.fill,
-                    events: {
-                        didSelect: function (sender, indexPath, data) {
-                            if (indexPath.row == 1) {
-                                $ui.pop()
-                                $ui.animate({
-                                    duration: 0.3,
-                                    animation: function () {
-                                        $("scroll").alpha = 0
-                                    }
-                                })
-                                $ui.toast("查询当地天气...", 2)
-                                getLocation()
-                            } else if (indexPath.row == 0) {
-                                $ui.pop()
-                                $ui.animate({
-                                    duration: 0.3,
-                                    animation: function () {
-                                        $("scroll").alpha = 0
-                                    }
-                                })
-                                $ui.toast("查询中...", 2)
-                                getLocWeather(data.loc_title.text)
-                            }
+                },
+                layout: function (make, view) {
+                    make.top.equalTo(95)
+                    make.left.equalTo(25)
+                    make.right.equalTo(-25)
+                    make.size.equalTo($size(__width, 220))
+                },
+                events: {
+                    didSelect: function (sender, indexPath, data) {
+                        if (indexPath.row == 0) {
+                            $ui.pop()
+                            $ui.animate({
+                                duration: 0.3,
+                                animation: function () {
+                                    $("scroll").alpha = 0
+                                }
+                            })
+                            $ui.toast("查询当地天气...", 2)
+                            getLocation()
+                        } else {
+                            $ui.pop()
+                            $ui.animate({
+                                duration: 0.3,
+                                animation: function () {
+                                    $("scroll").alpha = 0
+                                }
+                            })
+                            $ui.toast("查询中...", 2)
+                            getLocWeather(data.loc_title.text)
                         }
                     }
-                }]
+                }
             },
+            // {
+            //     type: "view",
+            //     props: {
+
+            //     },
+            //     layout: function (make, view) {
+            //         make.top.equalTo($("loc_input").bottom).offset(40)
+            //         make.center.equalTo(view.super)
+            //         make.size.equalTo($size(view.super.frame.width - 20, 100))
+            //     },
+            //     views: [{
+            //         type: "label",
+            //         props: {
+            //             text: "TEST"
+            //         },
+            //         layout: $layout.fill
+            //     }]
+            // }
         ]
     })
-    var matView = $("matrix")
-    var locData = $cache.get("key") || []
-    matView.data = locData
 }
 
 // 实景图展示
@@ -757,7 +788,7 @@ function weatherSettings() {
                         $cache.remove("scrollColor")
                         $ui.toast("已清除", 2)
                     } else if (data == "检查更新") {
-                        $ui.loading(true)
+                        sender.cell(indexPath).startLoading()
                         $http.get({
                             url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/Weather/version.json",
                             handler: function (resp) {
@@ -765,6 +796,7 @@ function weatherSettings() {
                                 oldVersion = data['version']
                                 infors = data['informations']
                                 if (oldVersion !== __version) {
+                                    sender.cell(indexPath).stopLoading()
                                     $device.taptic(0)
                                     $ui.alert({
                                         title: "有新版本",
@@ -778,17 +810,19 @@ function weatherSettings() {
                                                 },
                                             },
                                             {
-                                                title: "暂不更新"
+                                                title: "暂不更新",
+                                                handler: function (sender) {},
                                             }
                                         ]
                                     })
                                 } else {
+                                    sender.cell(indexPath).stopLoading();
                                     $ui.alert({
                                         title: "暂无更新",
                                         actions: [{
                                             title: "好的",
                                             handler: function () {
-                                                $ui.loading(false)
+
                                             }
                                         }]
                                     })
@@ -822,7 +856,7 @@ function updateColorAlert() {
 
 // 随机生成十六进制颜色
 function getRandomColor() {
-    var colorElements = "0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f";
+    var colorElements = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, f";
     var colorArray = colorElements.split(",");
     var color = "#";
     for (var i = 0; i < 6; i++) {
