@@ -126,7 +126,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "settings",
-                        icon: $icon("002", $color("#F5F5F5"), $size(20, 20)),
+                        icon: $icon("129", $color("#F5F5F5"), $size(20, 20)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -153,6 +153,26 @@ function showData(text, wea) {
                     events: {
                         tapped: function (sender) {
                             $system.mailto("jianxun2004@gmail.com")
+                        }
+                    }
+                },
+                {
+                    type: "button",
+                    props: {
+                        id: "tts",
+                        icon: $icon("049", $color("#F5F5F5"), $size(20, 20)),
+                        bgcolor: $color("clear"),
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo($("settings"))
+                        make.left.inset(30)
+                    },
+                    events: {
+                        tapped: function (sender) {
+                            $ui.alert({
+                                title: "TTS",
+                                message: "语音播报",
+                            });
                         }
                     }
                 },
@@ -419,8 +439,7 @@ function newWeather() {
         props: {
             title: "搜索"
         },
-        views: [
-            {
+        views: [{
                 type: "input",
                 props: {
                     id: "loc_input",
@@ -477,8 +496,7 @@ function newWeather() {
             },
             {
                 type: "view",
-                props: {
-                },
+                props: {},
                 layout: function (make, view) {
                     make.top.equalTo($("loc_input").bottom).offset(40)
                     make.center.equalTo(view.super)
