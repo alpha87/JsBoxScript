@@ -77,19 +77,7 @@ function showData(text, wea) {
             type: "views",
             props: {},
             layout: $layout.fill,
-            views: [{
-                    type: "image",
-                    props: {
-                        id: "local_png",
-                        bgcolor: $rgba(100, 100, 100, 0),
-                        src: "assets/icon_007.png"
-                    },
-                    layout: function (make, view) {
-                        make.top.equalTo(20)
-                        make.left.equalTo(55)
-                        make.size.equalTo($size(18, 18))
-                    }
-                },
+            views: [
                 {
                     type: "label",
                     props: {
@@ -98,8 +86,8 @@ function showData(text, wea) {
                         text: parent_city !== location ? parent_city + location : parent_city,
                     },
                     layout: function (make, view) {
-                        make.top.equalTo($("local_png"))
-                        make.left.equalTo($("local_png")).offset(20)
+                        make.top.equalTo(20)
+                        make.left.equalTo(50)
                     },
                     events: {
                         tapped: function (sender) {
@@ -556,7 +544,6 @@ function newWeather() {
                                     $("scroll").alpha = 0
                                 }
                             })
-                            $ui.toast("查询当地天气...", 2)
                             getLocation()
                         } else {
                             $ui.pop()
@@ -566,7 +553,6 @@ function newWeather() {
                                     $("scroll").alpha = 0
                                 }
                             })
-                            $ui.toast("查询中...", 2)
                             getLocWeather(data.loc_title.text)
                         }
                     }
