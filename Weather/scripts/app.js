@@ -126,7 +126,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "settings",
-                        icon: $icon("129", $color("#F5F5F5"), $size(30, 30)),
+                        icon: $icon("129", $color("#F5F5F5"), $size(22, 22)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -143,7 +143,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "feedback",
-                        icon: $icon("030", $color("#F5F5F5"), $size(30, 30)),
+                        icon: $icon("030", $color("#F5F5F5"), $size(22, 22)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -160,7 +160,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "tts",
-                        icon: $icon("049", $color("#F5F5F5"), $size(30, 30)),
+                        icon: $icon("049", $color("#F5F5F5"), $size(22, 22)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -455,7 +455,12 @@ function newWeather() {
                 events: {
                     returned: function (sender) {
                         var _text = sender.text
-                        // todo 加入列表缓存
+                        cityList.unshift(_text)
+                        historyListView.insert({
+                            index: 0,
+                            value: _text,
+                        })
+                        $cache.set("cityList", cityList)
                         $ui.pop()
                         $ui.animate({
                             duration: 0.3,
@@ -476,7 +481,7 @@ function newWeather() {
                     textColor: $color("gray"),
                 },
                 layout: function (make) {
-                    make.top.equalTo($("loc_input").bottom).offset(10)
+                    make.top.equalTo($("loc_input").bottom).offset(20)
                     make.left.equalTo(25)
                 }
             },
@@ -536,10 +541,10 @@ function newWeather() {
                     },
                 },
                 layout: function (make, view) {
-                    make.top.equalTo(95)
-                    make.left.equalTo(25)
-                    make.right.equalTo(-25)
-                    make.size.equalTo($size(__width, 220))
+                    make.top.equalTo(90)
+                    make.left.equalTo(5)
+                    make.right.equalTo(-5)
+                    make.size.equalTo($size(__width, 210))
                 },
                 events: {
                     didSelect: function (sender, indexPath, data) {
@@ -567,26 +572,91 @@ function newWeather() {
                     }
                 }
             },
-            // {
-            //     type: "view",
-            //     props: {
+            {
+                type: "label",
+                props: {
+                    id: "history_city",
+                    text: "历史记录",
+                    textColor: $color("gray"),
+                    hidden: $cache.get("cityList") == undefined ? true : false
+                },
+                layout: function (make, view) {
+                    $console.info(view.super.frame)
+                    make.top.equalTo($("matrix").bottom).offset(10)
+                    make.left.equalTo($("label_city"))
+                }
+            },
+            {
+                type: "button",
+                props: {
+                    id: "cleanHistory",
+                    icon: $icon("027", $color("#ADD8E6"), $size(22, 22)),
+                    bgcolor: $color("clear"),
+                    hidden: $cache.get("cityList") == undefined ? true : false
+                },
+                layout: function (make, view) {
+                    $console.info(view.super.frame)
+                    make.top.equalTo($("matrix").bottom).offset(10)
+                    make.right.inset(25)
+                },
+                events: {
+                    tapped: function (sender) {
+                        $ui.alert({
+                            title: "清空全部记录",
+                            actions: [{
+                                title: "清除",
+                                handler: function () {
+                                    historyListView.data = []
+                                    $("history_city").hidden = true
+                                    $("cleanHistory").hidden = true
+                                    $cache.remove("cityList")
+                                }
+                            }, {
+                                title: "取消"
+                            }]
+                        })
+                    }
+                }
+            },
+            {
+                type: "view",
+                props: {},
+                layout: function (make, view) {
+                    make.left.equalTo(15)
+                    make.right.equalTo(-15)
+                    make.top.equalTo($("matrix").bottom).offset(40)
+                    make.size.equalTo($size(__width, 300))
+                },
+                views: [{
+                    type: "list",
+                    props: {
+                        id: "history_list",
+                        actions: [{
+                            title: "delete",
+                            handler: function (sender, indexPath) {
+                                var cityName = cityList[indexPath.row]
+                                var index = cityList.indexOf(cityName)
+                                if (index >= 0) {
+                                    cityList.splice(index, 1)
+                                    $cache.set("cityList", cityList)
+                                }
+                            }
+                        }]
+                    },
+                    layout: $layout.fill,
+                    events: {
+                        didSelect: function (sender, indexPath, title) {
 
-            //     },
-            //     layout: function (make, view) {
-            //         make.top.equalTo($("loc_input").bottom).offset(40)
-            //         make.center.equalTo(view.super)
-            //         make.size.equalTo($size(view.super.frame.width - 20, 100))
-            //     },
-            //     views: [{
-            //         type: "label",
-            //         props: {
-            //             text: "TEST"
-            //         },
-            //         layout: $layout.fill
-            //     }]
-            // }
+                        }
+                    }
+                }]
+            }
         ]
     })
+
+    var historyListView = $("history_list")
+    var cityList = $cache.get("cityList") || []
+    historyListView.data = cityList
 }
 
 // 实景图展示
