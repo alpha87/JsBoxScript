@@ -1,10 +1,10 @@
+$app.tips("点击地区查询其他地区天气\n长按查看天气所在地实景图")
+
 // 版本号
 var __version = "v1.0";
 
 // 存放实景图链接
 var photoUrl = []
-
-$app.tips("点击地区查询其他地区天气\n长按查看天气所在地实景图")
 
 // 获取当地经纬度
 function getLocation() {
@@ -415,12 +415,6 @@ function showData(text, wea) {
 }
 
 // 展示输入位置天气
-
-/* 
-TODO 
-热门城市用matrix展示
-缓存查询城市用列表展示
-*/
 function newWeather() {
     var __width = $device.info["screen"]["width"] - 50
     $ui.push({
@@ -477,8 +471,9 @@ function newWeather() {
                 type: "matrix",
                 props: {
                     columns: 3,
-                    itemHeight: 40,
                     spacing: 26,
+                    itemHeight: 40,
+                    scrollEnabled: false,
                     data: [{
                         loc_title: {
                             text: "定位"
@@ -692,7 +687,7 @@ function showPhoto() {
                 make.left.top.right.bottom.inset(10)
             },
             events: {
-                tapped: function (sender, indexPath, data) {
+                tapped: function () {
                     $ui.menu({
                         items: ["查看更多"],
                         handler: function (title, idx) {
@@ -709,7 +704,6 @@ function showPhoto() {
 
 // 查看更多实景图
 function showMorePhoto() {
-
     $ui.push({
         props: {
             title: "More"
@@ -803,7 +797,7 @@ function getPhoto(locationTitle) {
                     },
                     "params": {
                         "type": 0,
-                        "page_length": 30,
+                        "page_length": 5,
                         "latitude": 0,
                         "longitude": 0,
                         "city_id": __id,
@@ -886,12 +880,12 @@ function weatherSettings() {
                                     $device.taptic(0)
                                     $ui.alert({
                                         title: "有新版本",
-                                        message: infors.length > 12 ? infors.slice(0, 12) + "..." : infors,
+                                        message: infors,
                                         actions: [{
                                                 title: "立即更新",
                                                 handler: function (sender) {
                                                     $safari.open({
-                                                        url: "https://jsboxbbs.com/"
+                                                        url: "https://docs.xteko.com/"
                                                     })
                                                 },
                                             },
