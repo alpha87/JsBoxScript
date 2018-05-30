@@ -1,7 +1,7 @@
 $app.tips("点击地区查询其他地区天气\n长按查看天气所在地实景图")
 
 // 版本号
-var __version = "v1.0";
+var __version = "v1.1";
 
 // 存放实景图链接
 var photoUrl = []
@@ -885,7 +885,7 @@ function weatherSettings() {
                                                 title: "立即更新",
                                                 handler: function (sender) {
                                                     $safari.open({
-                                                        url: "https://docs.xteko.com/"
+                                                        url: "https://xteko.com/redir?name=Weather&icon=046&url=https://github.com/alpha87/JsBoxScript/raw/master/Weather/.output/Weather.box"
                                                     })
                                                 },
                                             },
