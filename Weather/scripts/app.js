@@ -442,13 +442,7 @@ function newWeather() {
                             value: _text,
                         })
                         $cache.set("cityList", cityList)
-                        $ui.pop()
-                        $ui.animate({
-                            duration: 0.3,
-                            animation: function () {
-                                $("scroll").alpha = 0
-                            }
-                        })
+                        _show()
                         $ui.toast("查询中...", 3)
                         getLocWeather(sender.text)
                     }
@@ -531,22 +525,10 @@ function newWeather() {
                 events: {
                     didSelect: function (sender, indexPath, data) {
                         if (indexPath.row == 0) {
-                            $ui.pop()
-                            $ui.animate({
-                                duration: 0.3,
-                                animation: function () {
-                                    $("scroll").alpha = 0
-                                }
-                            })
+                            _show()
                             getLocation()
                         } else {
-                            $ui.pop()
-                            $ui.animate({
-                                duration: 0.3,
-                                animation: function () {
-                                    $("scroll").alpha = 0
-                                }
-                            })
+                            _show()
                             getLocWeather(data.loc_title.text)
                         }
                     }
@@ -561,7 +543,6 @@ function newWeather() {
                     hidden: $cache.get("cityList") == undefined ? true : false
                 },
                 layout: function (make, view) {
-                    $console.info(view.super.frame)
                     make.top.equalTo($("matrix").bottom).offset(10)
                     make.left.equalTo($("label_city"))
                 }
@@ -575,7 +556,6 @@ function newWeather() {
                     hidden: $cache.get("cityList") == undefined ? true : false
                 },
                 layout: function (make, view) {
-                    $console.info(view.super.frame)
                     make.top.equalTo($("matrix").bottom).offset(10)
                     make.right.inset(25)
                 },
@@ -625,8 +605,9 @@ function newWeather() {
                     },
                     layout: $layout.fill,
                     events: {
-                        didSelect: function (sender, indexPath, title) {
-
+                        didSelect: function (sender, indexPath, cacheCity) {
+                            _show()
+                            getLocWeather(cacheCity)
                         }
                     }
                 }]
@@ -945,6 +926,17 @@ function getRandomColor() {
     return color;
 }
 
+
+// 动画
+function _show() {
+    $ui.pop()
+    $ui.animate({
+        duration: 0.3,
+        animation: function () {
+            $("scroll").alpha = 0
+        }
+    })
+}
 module.exports = {
     main: getLocation
 }
