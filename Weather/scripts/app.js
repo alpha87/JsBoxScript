@@ -1,5 +1,3 @@
-$app.tips("点击地区查询其他地区天气\n长按查看天气所在地实景图")
-
 // 版本号
 var __version = "v1.1";
 
@@ -622,6 +620,7 @@ function newWeather() {
 
 // 实景图展示
 function showPhoto() {
+    var photoUrl = $cache.get("photoUrl")
     $ui.push({
         props: {
             title: "实景图"
@@ -790,6 +789,7 @@ function getPhoto(locationTitle) {
                     pList = data["picture_list"]
                     for (var i in pList) {
                         photoUrl.unshift(pList[i]["path"])
+                        $cache.set("photoUrl", photoUrl)
                     }
                 }
             })
@@ -812,11 +812,11 @@ function weatherSettings() {
                     },
                     {
                         title: "其他",
-                        rows: ["清理缓存"]
+                        rows: ["清理主题缓存", "清理图片缓存"]
                     },
                     {
                         title: "版本号 " + __version,
-                        rows: ["检查更新"]
+                        rows: ["使用须知", "检查更新"]
                     }
                 ]
             },
@@ -845,9 +845,14 @@ function weatherSettings() {
                             color: $color(c)
                         })
                         updateColorAlert()
-                    } else if (data == "清理缓存") {
+                    } else if (data == "清理主题缓存") {
                         $cache.remove("scrollColor")
-                        $ui.toast("已清除", 2)
+                        $ui.toast("已清理", 2)
+                    } else if (data == "清理图片缓存") {
+                        $cache.remove("photoUrl")
+                        $ui.toast("已清理", 2)
+                    } else if (data == "使用须知") {
+                        showHelp()
                     } else if (data == "检查更新") {
                         sender.cell(indexPath).startLoading()
                         $http.get({
@@ -926,6 +931,23 @@ function getRandomColor() {
     return color;
 }
 
+// 展示使用须知
+function showHelp() {
+    var context = "# 这是一款简易的天气APP\n它依托于JSBOX，并提供一些简单的自定义功能。\n未来还会推出更多功能，敬请期待！"
+
+    $ui.push({
+        props: {
+            title: "使用须知"
+        },
+        views: [{
+            type: "markdown",
+            props: {
+                content: context
+            },
+            layout: $layout.fill
+        }]
+    })
+}
 
 // 动画
 function _show() {
