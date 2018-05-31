@@ -117,7 +117,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "settings",
-                        icon: $icon("129", $color("#F5F5F5"), $size(22, 22)),
+                        icon: $icon("129", $color("#DDDDDD"), $size(22, 22)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -134,7 +134,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "feedback",
-                        icon: $icon("030", $color("#F5F5F5"), $size(22, 22)),
+                        icon: $icon("030", $color("#DDDDDD"), $size(22, 22)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -151,7 +151,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "tts",
-                        icon: $icon("049", $color("#F5F5F5"), $size(22, 22)),
+                        icon: $icon("049", $color("#DDDDDD"), $size(22, 22)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
