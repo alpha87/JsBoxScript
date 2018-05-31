@@ -1,48 +1,11 @@
-var _nonce_str = Math.random().toString(36).substr(2);
-var timestamp = Date.parse(new Date()).toString().slice(0, 10);
-var text = "你好";
-
-var params = {
-    "aht": "0",
-    "apc": "58",
-    "app_id": "vRY8V88OPuxVJFim",
-    "format": "2",
-    "nonce_str": _nonce_str,
-    "sign": "",
-    "speaker": "1",
-    "speed": "100",
-    "text": text,
-    "time_stamp": timestamp,
-    "volume": "0"
-}
-
-function getReqSign(text, _nonce_str, timestamp) {
-    return "aht=0&apc=58&app_id=1106867585&format=2&nonce_str=" + _nonce_str + "&speaker=1&speed=100&text=" + encodeURI(text) + "&time_stamp=" + timestamp + "&volume=0&app_key=vRY8V88OPuxVJFim"
-}
-
-var _sign = $text.MD5((getReqSign(text, _nonce_str, timestamp))).toUpperCase()
-
-function getNewReq(text, _nonce_str, timestamp, _sign) {
-    return "aht=0&apc=58&app_id=1106867585&format=2&nonce_str=" + _nonce_str + "&sign=" + _sign + "&speaker=1&speed=100&text=" + encodeURI(text) + "&time_stamp=" + timestamp + "&volume=0"
-}
-
-var __params = getNewReq(text, _nonce_str, timestamp, _sign)
-
-$http.get({
-    url: 'https://api.ai.qq.com/fcgi-bin/aai/aai_tts?' + __params,
-    handler: function (resp) {
-        var data = resp.data
-        $console.info(data)
-    }
-})
-
-
-
 // 版本号
-var __version = "v1.1";
+var __version = "v1.2";
 
 // 存放实景图链接
 var photoUrl = []
+
+// appKey
+appKey = $cache.get("appKey") == undefined ? "8fbe6ffd3b024bfba065104eaec87196" : $cache.get("appKey")
 
 // 获取当地经纬度
 function getLocation() {
@@ -58,7 +21,7 @@ function getLocation() {
 // 获取和风天气API数据
 function getWeather(lat, lng) {
     $http.get({
-        url: "https://free-api.heweather.com/s6/weather?location=" + lng + "," + lat + "&key=8fbe6ffd3b024bfba065104eaec87196",
+        url: "https://free-api.heweather.com/s6/weather?location=" + lng + "," + lat + "&key=" + appKey,
         handler: function (resp) {
             var data = resp.data
             if (data.HeWeather6[0].status == "ok") {
@@ -73,7 +36,7 @@ function getWeather(lat, lng) {
 // 获取制定位置API数据
 function getLocWeather(text) {
     $http.get({
-        url: "https://free-api.heweather.com/s6/weather?location=" + encodeURI(text) + "&key=8fbe6ffd3b024bfba065104eaec87196",
+        url: "https://free-api.heweather.com/s6/weather?location=" + encodeURI(text) + "&key=" + appKey,
         handler: function (resp) {
             var data = resp.data
             if (data.HeWeather6[0].status == "ok") {
@@ -856,7 +819,7 @@ function weatherSettings() {
                     },
                     {
                         title: "版本号 " + __version,
-                        rows: ["使用须知", "检查更新"]
+                        rows: ["使用介绍", "APP KEY", "检查更新"]
                     }
                 ]
             },
@@ -891,8 +854,10 @@ function weatherSettings() {
                     } else if (data == "清理图片缓存") {
                         $cache.remove("photoUrl")
                         $ui.toast("已清理", 2)
-                    } else if (data == "使用须知") {
+                    } else if (data == "使用介绍") {
                         showHelp()
+                    } else if (data == "APP KEY") {
+                        changeKey()
                     } else if (data == "检查更新") {
                         sender.cell(indexPath).startLoading()
                         $http.get({
@@ -973,19 +938,76 @@ function getRandomColor() {
 
 // 展示使用须知
 function showHelp() {
-    var context = "# 这是一款简易的天气APP\n它依托于JSBOX，并提供一些简单的自定义功能。\n未来还会推出更多功能，敬请期待！"
+    $ui.loading(true)
+    $http.get({
+        url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/Weather/README.md",
+        handler: function (resp) {
+            $ui.loading(false)
+            var data = resp.data
+            $ui.push({
+                props: {
+                    title: "使用须知"
+                },
+                views: [{
+                    type: "markdown",
+                    props: {
+                        content: data
+                    },
+                    layout: $layout.fill
+                }]
+            })
+        }
+    })
+}
 
+// 更换AppKey
+function changeKey() {
     $ui.push({
         props: {
-            title: "使用须知"
+            title: "更换Key"
         },
         views: [{
-            type: "markdown",
-            props: {
-                content: context
+                type: "label",
+                props: {
+                    textColor: $color("gray"),
+                    text: "使用中：" + appKey
+                },
+                layout: function (make) {
+                    make.top.equalTo(10)
+                    make.left.right.inset(15)
+                }
             },
-            layout: $layout.fill
-        }]
+            {
+                type: "input",
+                props: {
+                    placeholder: "输入你的key"
+                },
+                layout: function (make) {
+                    make.top.equalTo($("label").bottom).offset(10)
+                    make.left.right.inset(15)
+                    make.height.equalTo(35)
+                }
+            },
+            {
+                type: "button",
+                props: {
+                    title: "确认更换",
+                    contentEdgeInsets: $insets(5, 5, 5, 5)
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("input").bottom).offset(10)
+                    make.right.inset(15)
+                },
+                events: {
+                    tapped: function (sender) {
+                        $("input").blur()
+                        $cache.set("appKey", $("input").text)
+                        $ui.toast("更新成功")
+                        $device.taptic(0)
+                    }
+                }
+            },
+        ]
     })
 }
 
