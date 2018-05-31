@@ -7,6 +7,8 @@ var photoUrl = []
 // appKey
 appKey = $cache.get("appKey") == undefined ? "8fbe6ffd3b024bfba065104eaec87196" : $cache.get("appKey")
 
+autoUpdate()
+
 // 获取当地经纬度
 function getLocation() {
     $location.fetch({
