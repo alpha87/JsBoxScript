@@ -16,12 +16,6 @@ Weather是一款简洁的天气应用，使用[和风天气](http://www.heweathe
 
 5. 支持在线更新。
 
-## 问题
-
-1. 主界面屏幕不能动态适配。可在 `app.js` 文件下**177行**修改。
-
-2. 语音播报功能暂时未开放。
-
 ** 如果需要更多功能，在主界面右下角可以发邮件反馈。**
 
 ![](http://p9fwt88yw.bkt.clouddn.com/webwxgetmsgimg.jpeg)

@@ -823,7 +823,7 @@ function weatherSettings() {
                     },
                     {
                         title: "版本号 " + __version,
-                        rows: ["使用介绍", "APP KEY", "检查更新"]
+                        rows: ["使用介绍", "更新appKey", "检查更新"]
                     }
                 ]
             },
@@ -861,7 +861,7 @@ function weatherSettings() {
                     } else if (data == "使用介绍") {
                         $ui.toast("加载中", 1)
                         showHelp()
-                    } else if (data == "APP KEY") {
+                    } else if (data == "更新appKey") {
                         changeKey()
                     } else if (data == "检查更新") {
                         sender.cell(indexPath).startLoading()
