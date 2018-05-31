@@ -175,7 +175,7 @@ function showData(text, wea) {
                     layout: function (make, view) {
                         make.top.equalTo($("local").bottom).offset(15)
                         make.size.equalTo($size(350, 520)) // i6
-                        // make.size.equalTo($size(360, 550)) // i6 p
+                        // // make.size.equalTo($size(360, 550)) // i6 p
                         make.centerX.equalTo();
                     },
                     events: {
