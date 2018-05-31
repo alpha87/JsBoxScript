@@ -1,3 +1,43 @@
+var _nonce_str = Math.random().toString(36).substr(2);
+var timestamp = Date.parse(new Date()).toString().slice(0, 10);
+var text = "你好";
+
+var params = {
+    "aht": "0",
+    "apc": "58",
+    "app_id": "vRY8V88OPuxVJFim",
+    "format": "2",
+    "nonce_str": _nonce_str,
+    "sign": "",
+    "speaker": "1",
+    "speed": "100",
+    "text": text,
+    "time_stamp": timestamp,
+    "volume": "0"
+}
+
+function getReqSign(text, _nonce_str, timestamp) {
+    return "aht=0&apc=58&app_id=1106867585&format=2&nonce_str=" + _nonce_str + "&speaker=1&speed=100&text=" + encodeURI(text) + "&time_stamp=" + timestamp + "&volume=0&app_key=vRY8V88OPuxVJFim"
+}
+
+var _sign = $text.MD5((getReqSign(text, _nonce_str, timestamp))).toUpperCase()
+
+function getNewReq(text, _nonce_str, timestamp, _sign) {
+    return "aht=0&apc=58&app_id=1106867585&format=2&nonce_str=" + _nonce_str + "&sign=" + _sign + "&speaker=1&speed=100&text=" + encodeURI(text) + "&time_stamp=" + timestamp + "&volume=0"
+}
+
+var __params = getNewReq(text, _nonce_str, timestamp, _sign)
+
+$http.get({
+    url: 'https://api.ai.qq.com/fcgi-bin/aai/aai_tts?' + __params,
+    handler: function (resp) {
+        var data = resp.data
+        $console.info(data)
+    }
+})
+
+
+
 // 版本号
 var __version = "v1.1";
 

@@ -58,7 +58,7 @@ function showToday(wea) {
                 },
                 layout: function (make, view) {
                     make.top.equalTo()
-                    make.left.equalTo(30)
+                    make.left.equalTo(20)
                 }
             },
             {
@@ -70,7 +70,7 @@ function showToday(wea) {
                 },
                 layout: function (make, view) {
                     make.top.equalTo(5)
-                    make.right.equalTo(-130)
+                    make.centerX.equalTo(0)
                 }
             },
             {
@@ -93,7 +93,7 @@ function showToday(wea) {
                     text: "🌬" + wind_dir,
                 },
                 layout: function (make, view) {
-                    make.top.equalTo($("tmp")).offset(20)
+                    make.top.equalTo($("tmp")).offset(15)
                     make.right.equalTo(-30)
                 }
             },
@@ -105,7 +105,7 @@ function showToday(wea) {
                     text: "💦 " + today_wea["pop"] + "%",
                 },
                 layout: function (make, view) {
-                    make.top.equalTo($("wind").bottom).offset(20)
+                    make.top.equalTo($("tmp_m"))
                     make.right.equalTo($("wind"))
                 }
             },
@@ -130,7 +130,7 @@ function showToday(wea) {
                 },
                 layout: function (make, view) {
                     make.size.equalTo($size(30, 30))
-                    make.right.equalTo($("tomo_date").right).offset(100)
+                    make.centerX.equalTo(-20)
                     make.centerY.equalTo($("tomo_date"))
                 }
             },
@@ -142,7 +142,7 @@ function showToday(wea) {
                     text: tomorrow_wea.cond_txt_d,
                 },
                 layout: function (make, view) {
-                    make.right.equalTo($("tomo_image").right).offset(40)
+                    make.right.equalTo($("tomo_image").right).offset(45)
                     make.centerY.equalTo($("tomo_date"))
                 }
             },
@@ -178,7 +178,7 @@ function showToday(wea) {
                 },
                 layout: function (make, view) {
                     make.size.equalTo($size(30, 30))
-                    make.right.equalTo($("oth_date").right).offset(100)
+                    make.centerX.equalTo(-20)
                     make.centerY.equalTo($("oth_date"))
                 }
             },
@@ -190,7 +190,7 @@ function showToday(wea) {
                     text: other_wea.cond_txt_d,
                 },
                 layout: function (make, view) {
-                    make.right.equalTo($("oth_image").right).offset(40)
+                    make.right.equalTo($("oth_image").right).offset(45)
                     make.centerY.equalTo($("oth_date"))
                 }
             },
