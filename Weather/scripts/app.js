@@ -1,5 +1,5 @@
 // 版本号
-var __version = "v1.2";
+var __version = "v1.2.1";
 
 // 存放实景图链接
 var photoUrl = []
@@ -86,7 +86,7 @@ function showData(text, wea) {
                         text: parent_city !== location ? parent_city + location : parent_city,
                     },
                     layout: function (make, view) {
-                        make.top.equalTo(20)
+                        make.top.equalTo(15)
                         make.left.equalTo(50)
                     },
                     events: {
@@ -119,7 +119,7 @@ function showData(text, wea) {
                     },
                     layout: function (make, view) {
                         make.right.inset(80)
-                        make.bottom.inset(20)
+                        make.bottom.inset(10)
                     },
                     events: {
                         tapped: function (sender) {
@@ -159,7 +159,7 @@ function showData(text, wea) {
                         tapped: function (sender) {
                             $ui.alert({
                                 title: "TTS",
-                                message: "语音播报",
+                                message: "敬请期待",
                             });
                         }
                     }
@@ -173,8 +173,9 @@ function showData(text, wea) {
                         alwaysBounceHorizontal: false,
                     },
                     layout: function (make, view) {
-                        make.top.equalTo($("local").bottom).offset(20)
-                        make.size.equalTo($size(360, 550))
+                        make.top.equalTo($("local").bottom).offset(15)
+                        make.size.equalTo($size(350, 520)) // i6
+                        // make.size.equalTo($size(360, 550)) // i6 p
                         make.centerX.equalTo();
                     },
                     events: {
