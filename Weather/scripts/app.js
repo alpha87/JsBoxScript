@@ -855,6 +855,7 @@ function weatherSettings() {
                         $cache.remove("photoUrl")
                         $ui.toast("已清理", 2)
                     } else if (data == "使用介绍") {
+                        $ui.toast("加载中", 1)
                         showHelp()
                     } else if (data == "APP KEY") {
                         changeKey()
