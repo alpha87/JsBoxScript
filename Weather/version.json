@@ -1,6 +1,6 @@
 {
     "url": "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/Weather/version.json",
-    "version": "v1.2.2",
-    "informations": "已主动适应各种分辨率。",
+    "version": "v1.2.3",
+    "informations": "已主动适应各种分辨率，自动检查更新，优化体验。",
     "author": "Jianxun"
 }

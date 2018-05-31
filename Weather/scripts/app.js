@@ -1,5 +1,5 @@
 // 版本号
-var __version = "v1.2.2";
+var __version = "v1.2.3";
 
 // 存放实景图链接
 var photoUrl = []
@@ -1038,7 +1038,6 @@ function autoUpdate() {
             oldVersion = data['version']
             infors = data['informations']
             if (oldVersion !== __version) {
-                sender.cell(indexPath).stopLoading()
                 $device.taptic(0)
                 $ui.alert({
                     title: "有新版本",
