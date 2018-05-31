@@ -1,5 +1,5 @@
 // 版本号
-var __version = "v1.2.1";
+var __version = "v1.2.2";
 
 // 存放实景图链接
 var photoUrl = []
@@ -50,6 +50,9 @@ function getLocWeather(text) {
 
 // 普通视图
 function showData(text, wea) {
+    var __width = $device.info["screen"]["width"] - 50
+    var __height = $device.info['screen']["height"] - 160
+
     // 接口基本数据
     var _basic = wea.HeWeather6[0].basic
     var parent_city = _basic.parent_city
@@ -174,7 +177,7 @@ function showData(text, wea) {
                     },
                     layout: function (make, view) {
                         make.top.equalTo($("local").bottom).offset(15)
-                        make.size.equalTo($size(350, 520)) // i6
+                        make.size.equalTo($size(__width, __height)) // i6
                         // // make.size.equalTo($size(360, 550)) // i6 p
                         make.centerX.equalTo();
                     },
@@ -1023,6 +1026,40 @@ function _show() {
         }
     })
 }
+
+// 主动检查更新
+function autoUpdate() {
+    $http.get({
+        url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/Weather/version.json",
+        handler: function (resp) {
+            var data = resp.data
+            oldVersion = data['version']
+            infors = data['informations']
+            if (oldVersion !== __version) {
+                sender.cell(indexPath).stopLoading()
+                $device.taptic(0)
+                $ui.alert({
+                    title: "有新版本",
+                    message: infors,
+                    actions: [{
+                            title: "立即更新",
+                            handler: function (sender) {
+                                $safari.open({
+                                    url: "https://xteko.com/redir?name=Weather&icon=046&url=https://github.com/alpha87/JsBoxScript/raw/master/Weather/.output/Weather.box"
+                                })
+                            },
+                        },
+                        {
+                            title: "暂不更新",
+                            handler: function (sender) {},
+                        }
+                    ]
+                })
+            }
+        }
+    })
+}
+
 module.exports = {
     main: getLocation
 }
