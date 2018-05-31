@@ -14,7 +14,7 @@ Weather具备基本的天气状况信息，以及未来两天的天气预报。
 
 ** 如果需要更多功能，在主界面右下角可以发邮件反馈。**
 
-！[](http://p9fwt88yw.bkt.clouddn.com/webwxgetmsgimg.jpeg)
+![](http://p9fwt88yw.bkt.clouddn.com/webwxgetmsgimg.jpeg)
 
 ![](http://p9fwt88yw.bkt.clouddn.com/webwxgetmsgimg%20%281%29.jpeg)
 
