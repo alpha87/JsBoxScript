@@ -1,5 +1,5 @@
 // 版本号
-var __version = "v1.2.3";
+var __version = "v1.2.4";
 
 // 存放实景图链接
 var photoUrl = []
@@ -7,7 +7,8 @@ var photoUrl = []
 // appKey
 appKey = $cache.get("appKey") == undefined ? "8fbe6ffd3b024bfba065104eaec87196" : $cache.get("appKey")
 
-autoUpdate()
+// 判断是否自动检查更新
+$cache.get("autoUpdateSwitch") == undefined ? autoUpdate() : ($cache.get("autoUpdateSwitch") ? autoUpdate() : null)
 
 // 获取当地经纬度
 function getLocation() {
@@ -345,7 +346,7 @@ function showData(text, wea) {
                             type: "label",
                             props: {
                                 id: "tomo_cond",
-                                font: $font("bold", 20),
+                                font: tomorrow_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
                                 text: tomorrow_wea.cond_txt_d,
                             },
                             layout: function (make, view) {
@@ -394,7 +395,7 @@ function showData(text, wea) {
                             type: "label",
                             props: {
                                 id: "oth_cond",
-                                font: $font("bold", 20),
+                                font: other_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
                                 text: other_wea.cond_txt_d,
                             },
                             layout: function (make, view) {
@@ -808,6 +809,39 @@ function getPhoto(locationTitle) {
 
 // 设置界面
 function weatherSettings() {
+    const versionUITemp = {
+        type: "view",
+        props: {},
+        views: [{
+                type: "label",
+                props: {
+                    id: "autoUpdateLabel",
+                    text: "检查更新"
+                },
+                layout: function (make, view) {
+                    make.center.equalTo()
+                    make.left.equalTo(15)
+                }
+            },
+            {
+                type: "switch",
+                props: {
+                    on: $cache.get("autoUpdateSwitch") == undefined ? true : $cache.get("autoUpdateSwitch")
+                },
+                layout: function (make, view) {
+                    make.top.equalTo(7)
+                    make.right.equalTo($("autoUpdateLabel"))
+                },
+                events: {
+                    changed: function (sender) {
+                        $cache.set("autoUpdateSwitch", sender.on)
+                    }
+                }
+            }
+        ],
+        layout: $layout.fill
+    }
+
     $ui.push({
         props: {
             title: "设定"
@@ -821,11 +855,11 @@ function weatherSettings() {
                     },
                     {
                         title: "其他",
-                        rows: ["清理主题缓存", "清理图片缓存"]
+                        rows: ["使用介绍", "清理缓存"]
                     },
                     {
                         title: "版本号 " + __version,
-                        rows: ["使用介绍", "更新appKey", "检查更新"]
+                        rows: ["更新appKey", versionUITemp]
                     }
                 ]
             },
@@ -854,18 +888,25 @@ function weatherSettings() {
                             color: $color(c)
                         })
                         updateColorAlert()
-                    } else if (data == "清理主题缓存") {
-                        $cache.remove("scrollColor")
-                        $ui.toast("已清理", 2)
-                    } else if (data == "清理图片缓存") {
-                        $cache.remove("photoUrl")
-                        $ui.toast("已清理", 2)
+                    } else if (data == "清理缓存") {
+                        $ui.menu({
+                            items: ["清理主题缓存", "清理图片缓存"],
+                            handler: function (title, idx) {
+                                if (idx == 0) {
+                                    $cache.remove("scrollColor")
+                                    $ui.toast("已清理", 1)
+                                } else if (idx == 1) {
+                                    $cache.remove("photoUrl")
+                                    $ui.toast("已清理", 1)
+                                }
+                            }
+                        })
                     } else if (data == "使用介绍") {
                         $ui.toast("加载中", 1)
                         showHelp()
                     } else if (data == "更新appKey") {
                         changeKey()
-                    } else if (data == "检查更新") {
+                    } else if (data.views[0].props.text == "检查更新") {
                         sender.cell(indexPath).startLoading()
                         $http.get({
                             url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/Weather/version.json",
@@ -932,17 +973,6 @@ function updateColorAlert() {
     })
 }
 
-// 随机生成十六进制颜色
-function getRandomColor() {
-    var colorElements = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, f";
-    var colorArray = colorElements.split(",");
-    var color = "#";
-    for (var i = 0; i < 6; i++) {
-        color += colorArray[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
 // 展示使用须知
 function showHelp() {
     $ui.loading(true)
@@ -953,7 +983,7 @@ function showHelp() {
             var data = resp.data
             $ui.push({
                 props: {
-                    title: "使用须知"
+                    title: "使用介绍"
                 },
                 views: [{
                     type: "markdown",
@@ -1059,6 +1089,17 @@ function autoUpdate() {
             }
         }
     })
+}
+
+// 随机生成十六进制颜色
+function getRandomColor() {
+    var colorElements = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, f";
+    var colorArray = colorElements.split(",");
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+        color += colorArray[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
 
 module.exports = {

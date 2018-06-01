@@ -1,6 +1,6 @@
 ## Weather
 
-Weather是一款简洁的天气应用，使用[和风天气](http://www.heweather.com/)接口。
+Weather是一款简洁的天气应用，使用和风天气接口。
 
 使用前建议更换为自己的**appKey**（可以在[和风天气](https://console.heweather.com/register)免费注册）。
 
@@ -16,7 +16,7 @@ Weather是一款简洁的天气应用，使用[和风天气](http://www.heweathe
 
 5. 支持在线更新。
 
-** 如果需要更多功能，在主界面右下角可以发邮件反馈。**
+** 如果需要更多功能或建议，在主界面右下角可以发邮件反馈。**
 
 ![](http://p9fwt88yw.bkt.clouddn.com/webwxgetmsgimg.jpeg)
 
