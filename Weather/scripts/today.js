@@ -138,7 +138,7 @@ function showToday(wea) {
                 type: "label",
                 props: {
                     id: "tomo_cond",
-                    font: $font("bold", 20),
+                    font: tomorrow_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
                     text: tomorrow_wea.cond_txt_d,
                 },
                 layout: function (make, view) {
@@ -186,7 +186,7 @@ function showToday(wea) {
                 type: "label",
                 props: {
                     id: "oth_cond",
-                    font: $font("bold", 20),
+                    font: other_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
                     text: other_wea.cond_txt_d,
                 },
                 layout: function (make, view) {

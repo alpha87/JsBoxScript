@@ -5,7 +5,7 @@ var __version = "v1.2.4";
 var photoUrl = []
 
 // appKey
-appKey = $cache.get("appKey") == undefined ? "8fbe6ffd3b024bfba065104eaec87196" : $cache.get("appKey")
+appKey = $cache.get("appKey") == undefined ? "c6f839cb9c8a4581aed0900da94e7df6" : $cache.get("appKey")
 
 // 判断是否自动检查更新
 $cache.get("autoUpdateSwitch") == undefined ? autoUpdate() : ($cache.get("autoUpdateSwitch") ? autoUpdate() : null)
