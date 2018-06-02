@@ -1,13 +1,11 @@
 // 版本号
-var __version = "v1.2.4";
+var __version = "v1.2.5";
 
 // 存放实景图链接
 var photoUrl = []
 
-// appKey
+// appKey & 检查更新
 appKey = $cache.get("appKey") == undefined ? "c6f839cb9c8a4581aed0900da94e7df6" : $cache.get("appKey")
-
-// 判断是否自动检查更新
 $cache.get("autoUpdateSwitch") == undefined ? autoUpdate() : ($cache.get("autoUpdateSwitch") ? autoUpdate() : null)
 
 // 获取当地经纬度
@@ -346,11 +344,13 @@ function showData(text, wea) {
                             type: "label",
                             props: {
                                 id: "tomo_cond",
-                                font: tomorrow_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
+                                font: $font("bold", 20),
                                 text: tomorrow_wea.cond_txt_d,
                             },
                             layout: function (make, view) {
-                                make.right.equalTo($("tomo_image").right).offset(40)
+                                var num = ''
+                                tomorrow_wea.cond_txt_d.length < 3 ? num = 40 : num = 60
+                                make.right.equalTo($("tomo_image").right).offset(num)
                                 make.centerY.equalTo($("tomo_date"))
                             }
                         },
@@ -395,11 +395,13 @@ function showData(text, wea) {
                             type: "label",
                             props: {
                                 id: "oth_cond",
-                                font: other_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
+                                font: $font("bold", 20),
                                 text: other_wea.cond_txt_d,
                             },
                             layout: function (make, view) {
-                                make.right.equalTo($("oth_image").right).offset(40)
+                                var num = ''
+                                other_wea.cond_txt_d.length < 3 ? num = 40 : num = 60
+                                make.right.equalTo($("oth_image").right).offset(num)
                                 make.centerY.equalTo($("oth_date"))
                             }
                         },
@@ -1067,7 +1069,7 @@ function autoUpdate() {
             var data = resp.data
             oldVersion = data['version']
             infors = data['informations']
-            if (oldVersion !== __version) {
+            if ((oldVersion !== __version) && (data !== "")) {
                 $device.taptic(0)
                 $ui.alert({
                     title: "有新版本",

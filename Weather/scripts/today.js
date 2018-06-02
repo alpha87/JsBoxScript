@@ -138,11 +138,13 @@ function showToday(wea) {
                 type: "label",
                 props: {
                     id: "tomo_cond",
-                    font: tomorrow_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
+                    font: $font("bold", 20),
                     text: tomorrow_wea.cond_txt_d,
                 },
                 layout: function (make, view) {
-                    make.right.equalTo($("tomo_image").right).offset(45)
+                    var num = ''
+                    tomorrow_wea.cond_txt_d.length < 3 ? num = 45 : num = 65
+                    make.right.equalTo($("tomo_image").right).offset(num)
                     make.centerY.equalTo($("tomo_date"))
                 }
             },
@@ -186,11 +188,13 @@ function showToday(wea) {
                 type: "label",
                 props: {
                     id: "oth_cond",
-                    font: other_wea.cond_txt_d.length < 3 ? $font("bold", 20) : $font("bold", 14),
+                    font: $font("bold", 20),
                     text: other_wea.cond_txt_d,
                 },
                 layout: function (make, view) {
-                    make.right.equalTo($("oth_image").right).offset(45)
+                    var num = ''
+                    other_wea.cond_txt_d.length < 3 ? num = 45 : num = 65
+                    make.right.equalTo($("oth_image").right).offset(num)
                     make.centerY.equalTo($("oth_date"))
                 }
             },
