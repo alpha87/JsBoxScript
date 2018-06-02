@@ -51,25 +51,26 @@ function getLocWeather(text) {
 
 // 普通视图
 function showData(text, wea) {
-    var __width = $device.info["screen"]["width"] - 50
-    var __height = $device.info['screen']["height"] - 160
+    // scroll动态边距
+    var __width = $device.info["screen"]["width"] - 25,
+        __height = $device.info['screen']["height"] - 155
 
     // 接口基本数据
-    var _basic = wea.HeWeather6[0].basic
-    var parent_city = _basic.parent_city
-    var area = _basic.admin_area != undefined ? _basic.admin_area : ""
-    var location = _basic.location
-    var update_date = wea.HeWeather6[0].update.loc
-    var _now = wea.HeWeather6[0]["now"]
-    var tmp = _now.tmp
-    var cond_code = _now.cond_code
-    var cond_text = _now.cond_txt
-    var wind_dir = _now.wind_dir
-    var wind_sc = _now.wind_sc
-    var daily_forecast = wea.HeWeather6[0].daily_forecast
-    var today_wea = daily_forecast["0"]
-    var tomorrow_wea = daily_forecast["1"]
-    var other_wea = daily_forecast["2"]
+    var _basic = wea.HeWeather6[0].basic,
+        parent_city = _basic.parent_city,
+        area = _basic.admin_area != undefined ? _basic.admin_area : "",
+        location = _basic.location,
+        update_date = wea.HeWeather6[0].update.loc,
+        _now = wea.HeWeather6[0]["now"],
+        tmp = _now.tmp,
+        cond_code = _now.cond_code,
+        cond_text = _now.cond_txt,
+        wind_dir = _now.wind_dir,
+        wind_sc = _now.wind_sc,
+        daily_forecast = wea.HeWeather6[0].daily_forecast,
+        today_wea = daily_forecast["0"],
+        tomorrow_wea = daily_forecast["1"],
+        other_wea = daily_forecast["2"]
 
     getPhoto(parent_city)
     photoUrl.reverse()
@@ -86,7 +87,7 @@ function showData(text, wea) {
                     type: "label",
                     props: {
                         id: "local",
-                        font: $font("bold", 16),
+                        font: $font("bold", 17),
                         text: parent_city !== location ? parent_city + location : parent_city,
                     },
                     layout: function (make, view) {
@@ -106,7 +107,7 @@ function showData(text, wea) {
                     type: "label",
                     props: {
                         id: "date",
-                        font: $font("bold", 16),
+                        font: $font("bold", 17),
                         text: today_wea.date.slice(0, 10),
                     },
                     layout: function (make, view) {
@@ -152,7 +153,7 @@ function showData(text, wea) {
                     type: "button",
                     props: {
                         id: "tts",
-                        icon: $icon("049", $color("#DDDDDD"), $size(22, 22)),
+                        icon: $icon("049", $color("#CFDEE7"), $size(22, 22)),
                         bgcolor: $color("clear"),
                     },
                     layout: function (make, view) {
@@ -178,8 +179,7 @@ function showData(text, wea) {
                     },
                     layout: function (make, view) {
                         make.top.equalTo($("local").bottom).offset(15)
-                        make.size.equalTo($size(__width, __height)) // i6
-                        // // make.size.equalTo($size(360, 550)) // i6 p
+                        make.size.equalTo($size(__width, __height))
                         make.centerX.equalTo();
                     },
                     events: {
@@ -204,7 +204,7 @@ function showData(text, wea) {
                             layout: function (make, view) {
                                 make.centerX.equalTo(-80)
                                 make.centerY.equalTo(-220)
-                                make.size.equalTo($size(90, 90))
+                                make.size.equalTo($size(85, 85))
                             }
                         },
                         {
@@ -252,7 +252,7 @@ function showData(text, wea) {
                             },
                             layout: function (make, view) {
                                 make.centerX.equalTo()
-                                make.centerY.equalTo($("tmp_m")).offset(50)
+                                make.centerY.equalTo($("tmp_m")).offset(45)
                             }
                         },
                         {
@@ -276,7 +276,7 @@ function showData(text, wea) {
                             },
                             layout: function (make, view) {
                                 make.centerX.equalTo()
-                                make.centerY.equalTo($("today_info_m")).offset(50)
+                                make.centerY.equalTo($("today_info_m")).offset(45)
                             }
                         },
                         {
@@ -300,7 +300,7 @@ function showData(text, wea) {
                             },
                             layout: function (make, view) {
                                 make.centerX.equalTo()
-                                make.centerY.equalTo($("today_info_uv")).offset(50)
+                                make.centerY.equalTo($("today_info_uv")).offset(45)
                             }
                         },
                         {
@@ -324,7 +324,7 @@ function showData(text, wea) {
                             },
                             layout: function (make, view) {
                                 make.left.equalTo($("image")).offset(-10)
-                                make.top.equalTo($("today_info_uv").bottom).offset(40)
+                                make.top.equalTo($("today_info_uv").bottom).offset(45)
                             }
                         },
                         {
@@ -416,7 +416,7 @@ function showData(text, wea) {
                                 make.top.equalTo($("oth_cond"))
                                 make.right.equalTo($("tomo_wea_tmp"))
                             }
-                        },
+                        }
                     ]
                 }
             ]
