@@ -5,7 +5,7 @@ var __version = "v1.2.5";
 var photoUrl = []
 
 // appKey & 检查更新
-appKey = $cache.get("appKey") == undefined ? "c6f839cb9c8a4581aed0900da94e7df6" : $cache.get("appKey")
+appKey = $cache.get("appKey") == undefined ? "8fbe6ffd3b024bfba065104eaec87196" : $cache.get("appKey")
 $cache.get("autoUpdateSwitch") == undefined ? autoUpdate() : ($cache.get("autoUpdateSwitch") ? autoUpdate() : null)
 
 // 获取当地经纬度
@@ -55,8 +55,7 @@ function showData(text, wea) {
     var __height = $device.info['screen']["height"] - 160
 
     // 接口基本数据
-    var _basic = wea.HeWeather6[0].basic
-    var parent_city = _basic.parent_city
+    var _basic = wea.HeWeather6[0].basic, parent_city = _basic.parent_city
     var area = _basic.admin_area != undefined ? _basic.admin_area : ""
     var location = _basic.location
     var update_date = wea.HeWeather6[0].update.loc
@@ -71,6 +70,7 @@ function showData(text, wea) {
     var tomorrow_wea = daily_forecast["1"]
     var other_wea = daily_forecast["2"]
 
+
     getPhoto(parent_city)
     photoUrl.reverse()
 
@@ -83,341 +83,346 @@ function showData(text, wea) {
             props: {},
             layout: $layout.fill,
             views: [{
-                    type: "label",
-                    props: {
-                        id: "local",
-                        font: $font("bold", 16),
-                        text: parent_city !== location ? parent_city + location : parent_city,
-                    },
-                    layout: function (make, view) {
-                        make.top.equalTo(15)
-                        make.left.equalTo(50)
-                    },
-                    events: {
-                        tapped: function (sender) {
-                            newWeather()
-                        },
-                        longPressed: function (sender) {
-                            showPhoto()
-                        }
-                    }
+                type: "label",
+                props: {
+                    id: "local",
+                    font: $font("bold", 16),
+                    text: parent_city !== location ? parent_city + location : parent_city,
                 },
-                {
-                    type: "label",
-                    props: {
-                        id: "date",
-                        font: $font("bold", 16),
-                        text: today_wea.date.slice(0, 10),
-                    },
-                    layout: function (make, view) {
-                        make.top.equalTo($("local"))
-                        make.right.inset(50)
-                    }
+                layout: function (make, view) {
+                    make.top.equalTo(15)
+                    make.left.equalTo(50)
                 },
-                {
-                    type: "button",
-                    props: {
-                        id: "settings",
-                        icon: $icon("129", $color("#DDDDDD"), $size(22, 22)),
-                        bgcolor: $color("clear"),
+                events: {
+                    tapped: function (sender) {
+                        newWeather()
                     },
-                    layout: function (make, view) {
-                        make.right.inset(80)
-                        make.bottom.inset(10)
-                    },
-                    events: {
-                        tapped: function (sender) {
-                            weatherSettings()
-                        }
+                    longPressed: function (sender) {
+                        showPhoto()
                     }
-                },
-                {
-                    type: "button",
-                    props: {
-                        id: "feedback",
-                        icon: $icon("030", $color("#DDDDDD"), $size(22, 22)),
-                        bgcolor: $color("clear"),
-                    },
-                    layout: function (make, view) {
-                        make.top.equalTo($("settings"))
-                        make.right.inset(30)
-                    },
-                    events: {
-                        tapped: function (sender) {
-                            $system.mailto("jianxun2004@gmail.com")
-                        }
-                    }
-                },
-                {
-                    type: "button",
-                    props: {
-                        id: "tts",
-                        icon: $icon("049", $color("#DDDDDD"), $size(22, 22)),
-                        bgcolor: $color("clear"),
-                    },
-                    layout: function (make, view) {
-                        make.top.equalTo($("settings"))
-                        make.left.inset(30)
-                    },
-                    events: {
-                        tapped: function (sender) {
-                            $ui.alert({
-                                title: "TTS",
-                                message: "敬请期待",
-                            });
-                        }
-                    }
-                },
-                {
-                    type: "scroll",
-                    props: {
-                        radius: 18,
-                        bgcolor: $cache.get("scrollColor") == undefined ? $color("clear") : $cache.get("scrollColor").color,
-                        showsVerticalIndicator: false,
-                        alwaysBounceHorizontal: false,
-                    },
-                    layout: function (make, view) {
-                        make.top.equalTo($("local").bottom).offset(15)
-                        make.size.equalTo($size(__width, __height))
-                        make.centerX.equalTo();
-                    },
-                    events: {
-                        pulled: function (params) {
-                            if (text) {
-                                getLocWeather(text);
-                            } else {
-                                getLocation();
-                            }
-                            $("scroll").endRefreshing()
-                            $device.taptic(0)
-                            $ui.toast("已刷新  " + update_date.slice(5), 0.5)
-                        }
-                    },
-                    views: [{
-                            type: "image",
-                            props: {
-                                id: "image",
-                                src: 'assets/' + cond_code + '.png',
-                                bgcolor: $rgba(100, 100, 100, 0),
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo(-80)
-                                make.centerY.equalTo(-220)
-                                make.size.equalTo($size(90, 90))
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "tmp",
-                                font: $font("bold", 55),
-                                text: tmp + "℃",
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo(40)
-                                make.centerY.equalTo($("image"))
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "wind",
-                                font: $font("bold", 14),
-                                text: "🌬" + wind_dir + "  " + wind_sc + "mph / 💦 " + today_wea["pop"] + "%",
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo(0)
-                                make.centerY.equalTo($("tmp")).offset(60)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "tmp_m",
-                                font: $font("bold", 14),
-                                text: cond_text + "  " + today_wea.tmp_min + "°" + " ~ " + today_wea.tmp_max + "°",
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo(0)
-                                make.centerY.equalTo($("wind")).offset(30)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "today_info_s",
-                                font: $font(14),
-                                text: "日出：" + today_wea.sr + "    " + "日落：" + today_wea.ss,
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo()
-                                make.centerY.equalTo($("tmp_m")).offset(50)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "today_info_m",
-                                font: $font(14),
-                                text: "月出：" + today_wea.mr + "    " + "月落：" + today_wea.ms,
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo()
-                                make.centerY.equalTo($("today_info_s")).offset(30)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "today_info_c",
-                                font: $font(14),
-                                text: "日间：" + today_wea.cond_txt_d + "    " + "夜间：" + today_wea.cond_txt_n,
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo()
-                                make.centerY.equalTo($("today_info_m")).offset(50)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "today_info_uv",
-                                font: $font(14),
-                                text: "紫外线强度指数：" + today_wea.uv_index,
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo()
-                                make.centerY.equalTo($("today_info_c")).offset(30)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "today_info_w",
-                                font: $font(14),
-                                text: "风力：" + today_wea.wind_sc + "级",
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo()
-                                make.centerY.equalTo($("today_info_uv")).offset(50)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "today_info_uv",
-                                font: $font(14),
-                                text: "相对湿度：" + today_wea.hum + "%",
-                            },
-                            layout: function (make, view) {
-                                make.centerX.equalTo()
-                                make.centerY.equalTo($("today_info_w")).offset(30)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "tomo_date",
-                                font: $font("bold", 20),
-                                text: tomorrow_wea.date.slice(5),
-                            },
-                            layout: function (make, view) {
-                                make.left.equalTo($("image")).offset(-10)
-                                make.top.equalTo($("today_info_uv").bottom).offset(40)
-                            }
-                        },
-                        {
-                            type: "image",
-                            props: {
-                                id: "tomo_image",
-                                src: 'assets/' + tomorrow_wea.cond_code_d + '.png',
-                                bgcolor: $rgba(100, 100, 100, 0),
-                            },
-                            layout: function (make, view) {
-                                make.size.equalTo($size(30, 30))
-                                make.right.equalTo($("tomo_date").right).offset(70)
-                                make.centerY.equalTo($("tomo_date"))
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "tomo_cond",
-                                font: $font("bold", 20),
-                                text: tomorrow_wea.cond_txt_d,
-                            },
-                            layout: function (make, view) {
-                                var num = ''
-                                tomorrow_wea.cond_txt_d.length < 3 ? num = 40 : num = 60
-                                make.right.equalTo($("tomo_image").right).offset(num)
-                                make.centerY.equalTo($("tomo_date"))
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "tomo_wea_tmp",
-                                font: $font("bold", 17),
-                                text: tomorrow_wea.tmp_min + "°" + " ~ " + tomorrow_wea.tmp_max + "°",
-                            },
-                            layout: function (make, view) {
-                                make.top.equalTo($("tomo_cond"))
-                                make.right.equalTo($("tomo_cond").right).offset(110)
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "oth_date",
-                                font: $font("bold", 20),
-                                text: other_wea.date.slice(5),
-                            },
-                            layout: function (make, view) {
-                                make.left.equalTo($("tomo_date"))
-                                make.centerY.equalTo($("tomo_date").bottom).offset(40)
-                            }
-                        },
-                        {
-                            type: "image",
-                            props: {
-                                id: "oth_image",
-                                src: 'assets/' + other_wea.cond_code_d + '.png',
-                                bgcolor: $rgba(100, 100, 100, 0),
-                            },
-                            layout: function (make, view) {
-                                make.size.equalTo($size(30, 30))
-                                make.right.equalTo($("tomo_image").right)
-                                make.centerY.equalTo($("oth_date"))
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "oth_cond",
-                                font: $font("bold", 20),
-                                text: other_wea.cond_txt_d,
-                            },
-                            layout: function (make, view) {
-                                var num = ''
-                                other_wea.cond_txt_d.length < 3 ? num = 40 : num = 60
-                                make.right.equalTo($("oth_image").right).offset(num)
-                                make.centerY.equalTo($("oth_date"))
-                            }
-                        },
-                        {
-                            type: "label",
-                            props: {
-                                id: "oth_wea_tmp",
-                                font: $font("bold", 17),
-                                text: other_wea.tmp_min + "°" + " ~ " + other_wea.tmp_max + "°",
-                            },
-                            layout: function (make, view) {
-                                make.top.equalTo($("oth_cond"))
-                                make.right.equalTo($("tomo_wea_tmp"))
-                            }
-                        },
-                    ]
                 }
+            },
+            {
+                type: "label",
+                props: {
+                    id: "date",
+                    font: $font("bold", 16),
+                    text: today_wea.date.slice(0, 10),
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("local"))
+                    make.right.inset(50)
+                }
+            },
+            {
+                type: "button",
+                props: {
+                    id: "settings",
+                    icon: $icon("129", $color("#DDDDDD"), $size(22, 22)),
+                    bgcolor: $color("clear"),
+                },
+                layout: function (make, view) {
+                    make.right.inset(80)
+                    make.bottom.inset(10)
+                },
+                events: {
+                    tapped: function (sender) {
+                        weatherSettings()
+                    }
+                }
+            },
+            {
+                type: "button",
+                props: {
+                    id: "feedback",
+                    icon: $icon("030", $color("#DDDDDD"), $size(22, 22)),
+                    bgcolor: $color("clear"),
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("settings"))
+                    make.right.inset(30)
+                },
+                events: {
+                    tapped: function (sender) {
+                        $system.mailto("jianxun2004@gmail.com")
+                    }
+                }
+            },
+            {
+                type: "button",
+                props: {
+                    id: "tts",
+                    icon: $icon("049", $color("#DDDDDD"), $size(22, 22)),
+                    bgcolor: $color("clear"),
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("settings"))
+                    make.left.inset(30)
+                },
+                events: {
+                    tapped: function (sender) {
+                        $ui.alert({
+                            title: "TTS",
+                            message: "敬请期待",
+                        });
+                    }
+                }
+            },
+            {
+                type: "scroll",
+                props: {
+                    radius: 18,
+                    bgcolor: $cache.get("scrollColor") == undefined ? $color("clear") : $cache.get("scrollColor").color,
+                    showsVerticalIndicator: false,
+                    alwaysBounceHorizontal: false,
+                },
+                layout: function (make, view) {
+                    make.top.equalTo($("local").bottom).offset(15)
+                    make.size.equalTo($size(__width, __height))
+                    make.centerX.equalTo();
+                },
+                events: {
+                    pulled: function (params) {
+                        if (text) {
+                            getLocWeather(text);
+                        } else {
+                            getLocation();
+                        }
+                        $("scroll").endRefreshing()
+                        $device.taptic(0)
+                        $ui.toast("已刷新  " + update_date.slice(5), 0.5)
+                    }
+                },
+                views: [{
+                    type: "image",
+                    props: {
+                        id: "image",
+                        src: 'assets/' + cond_code + '.png',
+                        bgcolor: $rgba(100, 100, 100, 0),
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(-80)
+                        make.centerY.equalTo(-220)
+                        make.size.equalTo($size(90, 90))
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "tmp",
+                        font: $font("bold", 55),
+                        text: tmp + "℃",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(40)
+                        make.centerY.equalTo($("image"))
+                    },
+                    events: {
+                        tapped: function (sender) {
+                            hourly(wea)
+                        }
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "wind",
+                        font: $font("bold", 14),
+                        text: "🌬" + wind_dir + "  " + wind_sc + "mph / 💦 " + today_wea["pop"] + "%",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(0)
+                        make.centerY.equalTo($("tmp")).offset(60)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "tmp_m",
+                        font: $font("bold", 14),
+                        text: cond_text + "  " + today_wea.tmp_min + "°" + " ~ " + today_wea.tmp_max + "°",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo(0)
+                        make.centerY.equalTo($("wind")).offset(30)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_s",
+                        font: $font(14),
+                        text: "日出：" + today_wea.sr + "    " + "日落：" + today_wea.ss,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("tmp_m")).offset(50)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_m",
+                        font: $font(14),
+                        text: "月出：" + today_wea.mr + "    " + "月落：" + today_wea.ms,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_s")).offset(30)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_c",
+                        font: $font(14),
+                        text: "日间：" + today_wea.cond_txt_d + "    " + "夜间：" + today_wea.cond_txt_n,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_m")).offset(50)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_uv",
+                        font: $font(14),
+                        text: "紫外线强度指数：" + today_wea.uv_index,
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_c")).offset(30)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_w",
+                        font: $font(14),
+                        text: "风力：" + today_wea.wind_sc + "级",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_uv")).offset(50)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "today_info_uv",
+                        font: $font(14),
+                        text: "相对湿度：" + today_wea.hum + "%",
+                    },
+                    layout: function (make, view) {
+                        make.centerX.equalTo()
+                        make.centerY.equalTo($("today_info_w")).offset(30)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "tomo_date",
+                        font: $font("bold", 20),
+                        text: tomorrow_wea.date.slice(5),
+                    },
+                    layout: function (make, view) {
+                        make.left.equalTo($("image")).offset(-10)
+                        make.top.equalTo($("today_info_uv").bottom).offset(40)
+                    }
+                },
+                {
+                    type: "image",
+                    props: {
+                        id: "tomo_image",
+                        src: 'assets/' + tomorrow_wea.cond_code_d + '.png',
+                        bgcolor: $rgba(100, 100, 100, 0),
+                    },
+                    layout: function (make, view) {
+                        make.size.equalTo($size(30, 30))
+                        make.right.equalTo($("tomo_date").right).offset(70)
+                        make.centerY.equalTo($("tomo_date"))
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "tomo_cond",
+                        font: $font("bold", 20),
+                        text: tomorrow_wea.cond_txt_d,
+                    },
+                    layout: function (make, view) {
+                        var num = ''
+                        tomorrow_wea.cond_txt_d.length < 3 ? num = 40 : num = 60
+                        make.right.equalTo($("tomo_image").right).offset(num)
+                        make.centerY.equalTo($("tomo_date"))
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "tomo_wea_tmp",
+                        font: $font("bold", 17),
+                        text: tomorrow_wea.tmp_min + "°" + " ~ " + tomorrow_wea.tmp_max + "°",
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo($("tomo_cond"))
+                        make.right.equalTo($("tomo_cond").right).offset(110)
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "oth_date",
+                        font: $font("bold", 20),
+                        text: other_wea.date.slice(5),
+                    },
+                    layout: function (make, view) {
+                        make.left.equalTo($("tomo_date"))
+                        make.centerY.equalTo($("tomo_date").bottom).offset(40)
+                    }
+                },
+                {
+                    type: "image",
+                    props: {
+                        id: "oth_image",
+                        src: 'assets/' + other_wea.cond_code_d + '.png',
+                        bgcolor: $rgba(100, 100, 100, 0),
+                    },
+                    layout: function (make, view) {
+                        make.size.equalTo($size(30, 30))
+                        make.right.equalTo($("tomo_image").right)
+                        make.centerY.equalTo($("oth_date"))
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "oth_cond",
+                        font: $font("bold", 20),
+                        text: other_wea.cond_txt_d,
+                    },
+                    layout: function (make, view) {
+                        var num = ''
+                        other_wea.cond_txt_d.length < 3 ? num = 40 : num = 60
+                        make.right.equalTo($("oth_image").right).offset(num)
+                        make.centerY.equalTo($("oth_date"))
+                    }
+                },
+                {
+                    type: "label",
+                    props: {
+                        id: "oth_wea_tmp",
+                        font: $font("bold", 17),
+                        text: other_wea.tmp_min + "°" + " ~ " + other_wea.tmp_max + "°",
+                    },
+                    layout: function (make, view) {
+                        make.top.equalTo($("oth_cond"))
+                        make.right.equalTo($("tomo_wea_tmp"))
+                    }
+                },
+                ]
+            }
             ]
         }]
     })
@@ -431,196 +436,196 @@ function newWeather() {
             title: "搜索"
         },
         views: [{
-                type: "input",
-                props: {
-                    id: "loc_input",
-                    placeholder: "输入地区查询",
-                    radius: 15,
-                },
-                layout: function (make) {
-                    make.top.equalTo(15)
-                    make.height.equalTo(35)
-                    make.left.right.inset(20)
-                },
-                events: {
-                    returned: function (sender) {
-                        var _text = sender.text
-                        cityList.unshift(_text)
-                        historyListView.insert({
-                            index: 0,
-                            value: _text,
-                        })
-                        $cache.set("cityList", cityList)
-                        _show()
-                        $ui.toast("查询中...", 3)
-                        getLocWeather(sender.text)
-                    }
-                }
+            type: "input",
+            props: {
+                id: "loc_input",
+                placeholder: "输入地区查询",
+                radius: 15,
             },
-            {
-                type: "label",
-                props: {
-                    id: "label_city",
-                    text: "热门城市",
-                    textColor: $color("gray"),
-                },
-                layout: function (make) {
-                    make.top.equalTo($("loc_input").bottom).offset(20)
-                    make.left.equalTo(25)
-                }
+            layout: function (make) {
+                make.top.equalTo(15)
+                make.height.equalTo(35)
+                make.left.right.inset(20)
             },
-            {
-
-                type: "matrix",
-                props: {
-                    columns: 3,
-                    spacing: 26,
-                    itemHeight: 40,
-                    scrollEnabled: false,
-                    data: [{
-                        loc_title: {
-                            text: "定位"
-                        }
-                    }, {
-                        loc_title: {
-                            text: "北京"
-                        }
-                    }, {
-                        loc_title: {
-                            text: "上海"
-                        }
-                    }, {
-                        loc_title: {
-                            text: "太原"
-                        }
-                    }, {
-                        loc_title: {
-                            text: "深圳"
-                        }
-                    }, {
-                        loc_title: {
-                            text: "杭州"
-                        }
-                    }, {
-                        loc_title: {
-                            text: "成都"
-                        }
-                    }, {
-                        loc_title: {
-                            text: "天津"
-                        }
-                    }, ],
-                    template: {
-                        views: [{
-                            type: "label",
-                            props: {
-                                id: "loc_title",
-                                radius: 15,
-                                bgcolor: $cache.get("scrollColor") == undefined ? $color("#F5FFFA") : $cache.get("scrollColor").color,
-                                textColor: $color("tint"),
-                                align: $align.center,
-                                font: $font(20),
-                            },
-                            layout: $layout.fill
-                        }]
-                    },
-                },
-                layout: function (make, view) {
-                    make.top.equalTo(90)
-                    make.left.equalTo(5)
-                    make.right.equalTo(-5)
-                    make.size.equalTo($size(__width, 210))
-                },
-                events: {
-                    didSelect: function (sender, indexPath, data) {
-                        if (indexPath.row == 0) {
-                            _show()
-                            getLocation()
-                        } else {
-                            _show()
-                            getLocWeather(data.loc_title.text)
-                        }
-                    }
+            events: {
+                returned: function (sender) {
+                    var _text = sender.text
+                    cityList.unshift(_text)
+                    historyListView.insert({
+                        index: 0,
+                        value: _text,
+                    })
+                    $cache.set("cityList", cityList)
+                    _show()
+                    $ui.toast("查询中...", 3)
+                    getLocWeather(sender.text)
                 }
-            },
-            {
-                type: "label",
-                props: {
-                    id: "history_city",
-                    text: "历史记录",
-                    textColor: $color("gray"),
-                    hidden: $cache.get("cityList") == undefined ? true : false
-                },
-                layout: function (make, view) {
-                    make.top.equalTo($("matrix").bottom).offset(10)
-                    make.left.equalTo($("label_city"))
-                }
-            },
-            {
-                type: "button",
-                props: {
-                    id: "cleanHistory",
-                    icon: $icon("027", $color("#ADD8E6"), $size(22, 22)),
-                    bgcolor: $color("clear"),
-                    hidden: $cache.get("cityList") == undefined ? true : false
-                },
-                layout: function (make, view) {
-                    make.top.equalTo($("matrix").bottom).offset(10)
-                    make.right.inset(25)
-                },
-                events: {
-                    tapped: function (sender) {
-                        $ui.alert({
-                            title: "清空全部记录",
-                            actions: [{
-                                title: "清除",
-                                handler: function () {
-                                    historyListView.data = []
-                                    $("history_city").hidden = true
-                                    $("cleanHistory").hidden = true
-                                    $cache.remove("cityList")
-                                }
-                            }, {
-                                title: "取消"
-                            }]
-                        })
-                    }
-                }
-            },
-            {
-                type: "view",
-                props: {},
-                layout: function (make, view) {
-                    make.left.equalTo(15)
-                    make.right.equalTo(-15)
-                    make.top.equalTo($("matrix").bottom).offset(40)
-                    make.size.equalTo($size(__width, 300))
-                },
-                views: [{
-                    type: "list",
-                    props: {
-                        id: "history_list",
-                        actions: [{
-                            title: "delete",
-                            handler: function (sender, indexPath) {
-                                var cityName = cityList[indexPath.row]
-                                var index = cityList.indexOf(cityName)
-                                if (index >= 0) {
-                                    cityList.splice(index, 1)
-                                    $cache.set("cityList", cityList)
-                                }
-                            }
-                        }]
-                    },
-                    layout: $layout.fill,
-                    events: {
-                        didSelect: function (sender, indexPath, cacheCity) {
-                            _show()
-                            getLocWeather(cacheCity)
-                        }
-                    }
-                }]
             }
+        },
+        {
+            type: "label",
+            props: {
+                id: "label_city",
+                text: "热门城市",
+                textColor: $color("gray"),
+            },
+            layout: function (make) {
+                make.top.equalTo($("loc_input").bottom).offset(20)
+                make.left.equalTo(25)
+            }
+        },
+        {
+
+            type: "matrix",
+            props: {
+                columns: 3,
+                spacing: 26,
+                itemHeight: 40,
+                scrollEnabled: false,
+                data: [{
+                    loc_title: {
+                        text: "定位"
+                    }
+                }, {
+                    loc_title: {
+                        text: "北京"
+                    }
+                }, {
+                    loc_title: {
+                        text: "上海"
+                    }
+                }, {
+                    loc_title: {
+                        text: "太原"
+                    }
+                }, {
+                    loc_title: {
+                        text: "深圳"
+                    }
+                }, {
+                    loc_title: {
+                        text: "杭州"
+                    }
+                }, {
+                    loc_title: {
+                        text: "成都"
+                    }
+                }, {
+                    loc_title: {
+                        text: "天津"
+                    }
+                },],
+                template: {
+                    views: [{
+                        type: "label",
+                        props: {
+                            id: "loc_title",
+                            radius: 15,
+                            bgcolor: $cache.get("scrollColor") == undefined ? $color("#F5FFFA") : $cache.get("scrollColor").color,
+                            textColor: $color("tint"),
+                            align: $align.center,
+                            font: $font(20),
+                        },
+                        layout: $layout.fill
+                    }]
+                },
+            },
+            layout: function (make, view) {
+                make.top.equalTo(90)
+                make.left.equalTo(5)
+                make.right.equalTo(-5)
+                make.size.equalTo($size(__width, 210))
+            },
+            events: {
+                didSelect: function (sender, indexPath, data) {
+                    if (indexPath.row == 0) {
+                        _show()
+                        getLocation()
+                    } else {
+                        _show()
+                        getLocWeather(data.loc_title.text)
+                    }
+                }
+            }
+        },
+        {
+            type: "label",
+            props: {
+                id: "history_city",
+                text: "历史记录",
+                textColor: $color("gray"),
+                hidden: $cache.get("cityList") == undefined ? true : false
+            },
+            layout: function (make, view) {
+                make.top.equalTo($("matrix").bottom).offset(10)
+                make.left.equalTo($("label_city"))
+            }
+        },
+        {
+            type: "button",
+            props: {
+                id: "cleanHistory",
+                icon: $icon("027", $color("#ADD8E6"), $size(22, 22)),
+                bgcolor: $color("clear"),
+                hidden: $cache.get("cityList") == undefined ? true : false
+            },
+            layout: function (make, view) {
+                make.top.equalTo($("matrix").bottom).offset(10)
+                make.right.inset(25)
+            },
+            events: {
+                tapped: function (sender) {
+                    $ui.alert({
+                        title: "清空全部记录",
+                        actions: [{
+                            title: "清除",
+                            handler: function () {
+                                historyListView.data = []
+                                $("history_city").hidden = true
+                                $("cleanHistory").hidden = true
+                                $cache.remove("cityList")
+                            }
+                        }, {
+                            title: "取消"
+                        }]
+                    })
+                }
+            }
+        },
+        {
+            type: "view",
+            props: {},
+            layout: function (make, view) {
+                make.left.equalTo(15)
+                make.right.equalTo(-15)
+                make.top.equalTo($("matrix").bottom).offset(40)
+                make.size.equalTo($size(__width, 300))
+            },
+            views: [{
+                type: "list",
+                props: {
+                    id: "history_list",
+                    actions: [{
+                        title: "delete",
+                        handler: function (sender, indexPath) {
+                            var cityName = cityList[indexPath.row]
+                            var index = cityList.indexOf(cityName)
+                            if (index >= 0) {
+                                cityList.splice(index, 1)
+                                $cache.set("cityList", cityList)
+                            }
+                        }
+                    }]
+                },
+                layout: $layout.fill,
+                events: {
+                    didSelect: function (sender, indexPath, cacheCity) {
+                        _show()
+                        getLocWeather(cacheCity)
+                    }
+                }
+            }]
+        }
         ]
     })
 
@@ -643,35 +648,35 @@ function showPhoto() {
                 interval: 2,
                 radius: 8,
                 items: [{
-                        type: "image",
-                        props: {
-                            src: photoUrl[0].split("?")[0]
-                        }
-                    },
-                    {
-                        type: "image",
-                        props: {
-                            src: photoUrl[1].split("?")[0]
-                        }
-                    },
-                    {
-                        type: "image",
-                        props: {
-                            src: photoUrl[2].split("?")[0]
-                        }
-                    },
-                    {
-                        type: "image",
-                        props: {
-                            src: photoUrl[3].split("?")[0]
-                        }
-                    },
-                    {
-                        type: "image",
-                        props: {
-                            src: photoUrl[4].split("?")[0]
-                        }
+                    type: "image",
+                    props: {
+                        src: photoUrl[0].split("?")[0]
                     }
+                },
+                {
+                    type: "image",
+                    props: {
+                        src: photoUrl[1].split("?")[0]
+                    }
+                },
+                {
+                    type: "image",
+                    props: {
+                        src: photoUrl[2].split("?")[0]
+                    }
+                },
+                {
+                    type: "image",
+                    props: {
+                        src: photoUrl[3].split("?")[0]
+                    }
+                },
+                {
+                    type: "image",
+                    props: {
+                        src: photoUrl[4].split("?")[0]
+                    }
+                }
                 ]
             },
             layout: function (make, view) {
@@ -814,31 +819,31 @@ function weatherSettings() {
         type: "view",
         props: {},
         views: [{
-                type: "label",
-                props: {
-                    id: "autoUpdateLabel",
-                    text: "检查更新"
-                },
-                layout: function (make, view) {
-                    make.center.equalTo()
-                    make.left.equalTo(15)
-                }
+            type: "label",
+            props: {
+                id: "autoUpdateLabel",
+                text: "检查更新"
             },
-            {
-                type: "switch",
-                props: {
-                    on: $cache.get("autoUpdateSwitch") == undefined ? true : $cache.get("autoUpdateSwitch")
-                },
-                layout: function (make, view) {
-                    make.top.equalTo(7)
-                    make.right.equalTo($("autoUpdateLabel"))
-                },
-                events: {
-                    changed: function (sender) {
-                        $cache.set("autoUpdateSwitch", sender.on)
-                    }
+            layout: function (make, view) {
+                make.center.equalTo()
+                make.left.equalTo(15)
+            }
+        },
+        {
+            type: "switch",
+            props: {
+                on: $cache.get("autoUpdateSwitch") == undefined ? true : $cache.get("autoUpdateSwitch")
+            },
+            layout: function (make, view) {
+                make.top.equalTo(7)
+                make.right.equalTo($("autoUpdateLabel"))
+            },
+            events: {
+                changed: function (sender) {
+                    $cache.set("autoUpdateSwitch", sender.on)
                 }
             }
+        }
         ],
         layout: $layout.fill
     }
@@ -851,17 +856,17 @@ function weatherSettings() {
             type: "list",
             props: {
                 data: [{
-                        title: "主题",
-                        rows: ["跟随JSBox", "自定义", "随机"]
-                    },
-                    {
-                        title: "其他",
-                        rows: ["使用介绍", "清理缓存"]
-                    },
-                    {
-                        title: "版本号 " + __version,
-                        rows: ["更新appKey", versionUITemp]
-                    }
+                    title: "主题",
+                    rows: ["跟随JSBox", "自定义", "随机"]
+                },
+                {
+                    title: "其他",
+                    rows: ["使用介绍", "清理缓存"]
+                },
+                {
+                    title: "版本号 " + __version,
+                    rows: ["更新appKey", versionUITemp]
+                }
                 ]
             },
             layout: $layout.fill,
@@ -922,17 +927,17 @@ function weatherSettings() {
                                         title: "有新版本",
                                         message: infors,
                                         actions: [{
-                                                title: "立即更新",
-                                                handler: function (sender) {
-                                                    $safari.open({
-                                                        url: "https://xteko.com/redir?name=Weather&icon=046&url=https://github.com/alpha87/JsBoxScript/raw/master/Weather/.output/Weather.box"
-                                                    })
-                                                },
+                                            title: "立即更新",
+                                            handler: function (sender) {
+                                                $safari.open({
+                                                    url: "https://xteko.com/redir?name=Weather&icon=046&url=https://github.com/alpha87/JsBoxScript/raw/master/Weather/.output/Weather.box"
+                                                })
                                             },
-                                            {
-                                                title: "暂不更新",
-                                                handler: function (sender) {},
-                                            }
+                                        },
+                                        {
+                                            title: "暂不更新",
+                                            handler: function (sender) { },
+                                        }
                                         ]
                                     })
                                 } else {
@@ -962,14 +967,14 @@ function updateColorAlert() {
     $ui.alert({
         message: "更新主题色",
         actions: [{
-                title: "手动重启",
-                handler: function (sender) {
-                    $app.close()
-                }
-            },
-            {
-                title: "暂不重启"
+            title: "手动重启",
+            handler: function (sender) {
+                $app.close()
             }
+        },
+        {
+            title: "暂不重启"
+        }
         ]
     })
 }
@@ -1005,47 +1010,72 @@ function changeKey() {
             title: "更换Key"
         },
         views: [{
-                type: "label",
-                props: {
-                    textColor: $color("gray"),
-                    text: "使用中：" + appKey
-                },
-                layout: function (make) {
-                    make.top.equalTo(10)
-                    make.left.right.inset(15)
-                }
+            type: "label",
+            props: {
+                textColor: $color("gray"),
+                text: "使用中：" + appKey
             },
-            {
-                type: "input",
-                props: {
-                    placeholder: "输入你的key"
-                },
-                layout: function (make) {
-                    make.top.equalTo($("label").bottom).offset(10)
-                    make.left.right.inset(15)
-                    make.height.equalTo(35)
-                }
+            layout: function (make) {
+                make.top.equalTo(10)
+                make.left.right.inset(15)
+            }
+        },
+        {
+            type: "input",
+            props: {
+                placeholder: "输入你的key"
             },
-            {
-                type: "button",
-                props: {
-                    title: "确认更换",
-                    contentEdgeInsets: $insets(5, 5, 5, 5)
-                },
-                layout: function (make, view) {
-                    make.top.equalTo($("input").bottom).offset(10)
-                    make.right.inset(15)
-                },
-                events: {
-                    tapped: function (sender) {
-                        $("input").blur()
-                        $cache.set("appKey", $("input").text)
-                        $ui.toast("更新成功")
-                        $device.taptic(0)
-                    }
-                }
+            layout: function (make) {
+                make.top.equalTo($("label").bottom).offset(10)
+                make.left.right.inset(15)
+                make.height.equalTo(35)
+            }
+        },
+        {
+            type: "button",
+            props: {
+                title: "确认更换",
+                contentEdgeInsets: $insets(5, 5, 5, 5)
             },
+            layout: function (make, view) {
+                make.top.equalTo($("input").bottom).offset(10)
+                make.right.inset(15)
+            },
+            events: {
+                tapped: function (sender) {
+                    $("input").blur()
+                    $cache.set("appKey", $("input").text)
+                    $ui.toast("更新成功")
+                    $device.taptic(0)
+                }
+            }
+        },
         ]
+    })
+}
+
+// 小时天气预报
+function hourly(wea) {
+    hourlyData = wea.HeWeather6[0].hourly
+    const hourlyTemplate = {
+        type: "view",
+        props: {
+        },
+        layout: $layout.fill,
+        views: []
+    }
+
+    $ui.push({
+        props: {
+            title: "小时预报"
+        },
+        views: [{
+            type: "list",
+            props: {
+                data: ["JavaScript", "Swift"]
+            },
+            layout: $layout.fill,
+        }]
     })
 }
 
@@ -1074,17 +1104,17 @@ function autoUpdate() {
                     title: "有新版本",
                     message: infors,
                     actions: [{
-                            title: "立即更新",
-                            handler: function (sender) {
-                                $safari.open({
-                                    url: "https://xteko.com/redir?name=Weather&icon=046&url=https://github.com/alpha87/JsBoxScript/raw/master/Weather/.output/Weather.box"
-                                })
-                            },
+                        title: "立即更新",
+                        handler: function (sender) {
+                            $safari.open({
+                                url: "https://xteko.com/redir?name=Weather&icon=046&url=https://github.com/alpha87/JsBoxScript/raw/master/Weather/.output/Weather.box"
+                            })
                         },
-                        {
-                            title: "暂不更新",
-                            handler: function (sender) {},
-                        }
+                    },
+                    {
+                        title: "暂不更新",
+                        handler: function (sender) { },
+                    }
                     ]
                 })
             }
