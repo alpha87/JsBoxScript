@@ -172,14 +172,13 @@ function showData(text, wea) {
                     type: "scroll",
                     props: {
                         radius: 18,
-                        bgcolor: $cache.get("scrollColor") == undefined ? $color("#F5FFFA") : $cache.get("scrollColor").color,
+                        bgcolor: $cache.get("scrollColor") == undefined ? $color("clear") : $cache.get("scrollColor").color,
                         showsVerticalIndicator: false,
                         alwaysBounceHorizontal: false,
                     },
                     layout: function (make, view) {
                         make.top.equalTo($("local").bottom).offset(15)
-                        make.size.equalTo($size(__width, __height)) // i6
-                        // // make.size.equalTo($size(360, 550)) // i6 p
+                        make.size.equalTo($size(__width, __height))
                         make.centerX.equalTo();
                     },
                     events: {
