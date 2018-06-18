@@ -31,11 +31,6 @@ function getMessage(comCode, order) {
   })
 }
 
-//字符串去空格
-function trim(str) {
-  return str.replace(/(^\s*)|(\s*$)/g, "");
-}
-
 // 将获取到的信息格式化
 function convert(item) {
   return {
@@ -109,8 +104,8 @@ $input.text({
   placeholder: "输入快递单号",
   text: $cache.get("_order") !== undefined ? $cache.get("_order") : $clipboard.text,
   handler: function (text) {
-    $cache.set("_order", trim(text))
+    $cache.set("_order", text.trim())
     $ui.loading(true);
-    main(trim(text));
+    main(text.trim());
   }
 });
