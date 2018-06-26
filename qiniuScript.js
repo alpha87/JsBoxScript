@@ -2,10 +2,10 @@ String.prototype.urlsafe = function () {
     return this.replace(/\+/g, "-").replace(/\//g, "_")
 }
 var CryptoJS = require("crypto-js")
-var AK = "WR1-2JkrICcpLvdw15LnuUbtTUeLBCDPHjPPRyF9"
-var SK = "1blyh54_uoulFjMPPAt2N-GEXDgwKH-4n1vJICgd"
-var bucket = "jsboxscript"
-var domain = "p9fwt88yw.bkt.clouddn.com"
+var AK = "WR1-2JkrICcpLvdw15L"
+var SK = "1blyh54_uoulFjMPPAt"
+var bucket = "jspt"
+var domain = "p5jdshw2w.bkt.clouddn.com"
 var deadline = Math.round(new Date().getTime() / 1000) + 1 * 3600
 var params = { scope: bucket, deadline: deadline }
 var policy = JSON.stringify(params)
