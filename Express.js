@@ -23,6 +23,8 @@ function getMessage(comCode, order) {
           message: data.message,
         })
       } else if (data.status == "200") {
+        $("headerLabel").text = comCode.toUpperCase();
+        $("footerLabel").text = comCode.toUpperCase();
         $("mainList").data = data.data.map(function (item) {
           return convert(item);
         });
@@ -83,8 +85,29 @@ function main(order) {
       props: {
         id: "mainList",
         rowHeight: 65,
+        separatorInset: 5,
         template: temList,
         showsVerticalIndicator: false,
+        header: {
+          type: "label",
+          props: {
+            id: "headerLabel",
+            height: 20,
+            textColor: $color("#AAAAAA"),
+            align: $align.center,
+            font: $font(12)
+          }
+        },
+        footer: {
+          type: "label",
+          props: {
+            id: "footerLabel",
+            height: 20,
+            textColor: $color("#AAAAAA"),
+            align: $align.center,
+            font: $font(12)
+          }
+        }
       },
       layout: $layout.fill,
       events: {
