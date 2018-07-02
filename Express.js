@@ -22,8 +22,8 @@ function getMessage(comCode, order) {
           title: "查询失败",
           message: data.message,
         })
+        $app.close()
       } else if (data.status == "200") {
-        $("headerLabel").text = comCode.toUpperCase();
         $("footerLabel").text = comCode.toUpperCase();
         $("mainList").data = data.data.map(function (item) {
           return convert(item);
@@ -88,16 +88,6 @@ function main(order) {
         separatorInset: 5,
         template: temList,
         showsVerticalIndicator: false,
-        header: {
-          type: "label",
-          props: {
-            id: "headerLabel",
-            height: 20,
-            textColor: $color("#AAAAAA"),
-            align: $align.center,
-            font: $font(12)
-          }
-        },
         footer: {
           type: "label",
           props: {
