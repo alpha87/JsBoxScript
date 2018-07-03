@@ -1,5 +1,5 @@
-var __width = $device.info["screen"]["width"],
-    __height = $device.info['screen']["height"]
+var __width = $device.info["screen"]["width"] - 5,
+    __height = $device.info['screen']["height"] - 78
 
 $ui.render({
     props: {
@@ -18,7 +18,7 @@ $ui.render({
                 type: "image",
                 props: {
                     id: "logo",
-                    radius: 18,
+                    radius: 10,
                     src: "https://cdn.sspai.com/sspai/assets/img/favicon/icon_152.png"
                 },
                 layout: function (make, view) {
@@ -44,11 +44,11 @@ $ui.render({
                 type: "button",
                 props: {
                     id: "RSSIcon",
-                    icon: $icon("050", $color("gray"), $size(30, 30)),
+                    icon: $icon("050", $color("#e1e8f0"), $size(30, 30)),
                     bgcolor: $color("clear")
                 },
                 layout: function (make, view) {
-                    make.top.equalTo($("logo")).offset(7)
+                    make.top.equalTo($("logo")).offset(10)
                     make.right.inset(10)
                 },
                 events: {
@@ -62,11 +62,11 @@ $ui.render({
                 type: "button",
                 props: {
                     id: "searchIcon",
-                    icon: $icon("023", $color("gray"), $size(30, 30)),
+                    icon: $icon("023", $color("#e1e8f0"), $size(30, 30)),
                     bgcolor: $color("clear")
                 },
                 layout: function (make, view) {
-                    make.top.equalTo($("logo")).offset(7)
+                    make.top.equalTo($("logo")).offset(10)
                     make.right.equalTo($("RSSIcon").left).inset(15)
                 },
                 events: {
@@ -82,21 +82,52 @@ $ui.render({
                 }
             },
             {
-                type: "scroll",
+                type: "list",
                 props: {
-                    bgcolor: $color("tint"),
+                    id: "postList",
                     showsVerticalIndicator: false,
+                    data: [
+                        {
+                            label: {
+                                text: "Hello"
+                            }
+                        },
+                        {
+                            label: {
+                                text: "Hello"
+                            }
+                        },
+                    ],
+                    template: {
+                        props: {
+                            bgcolor: $color("white")
+                        },
+                        views: [
+                            {
+                                type: "label",
+                                props: {
+                                    id: "label",
+                                    lines: 2,
+                                    font: $font(22)
+                                },
+                                layout: $layout.fill
+                            }
+                        ]
+                    }
                 },
                 layout: function (make, view) {
                     make.top.equalTo($("logo").bottom).offset(5)
+                    make.centerX.equalTo()
                     make.size.equalTo($size(__width, __height))
                 },
                 events: {
-                    pulled: function(sender) {
-                        $("scroll").endRefreshing()
+                    pulled: function (sender) {
+                        $("postList").endRefreshing()
                     }
                 },
-                views: []
+                views: [
+
+                ]
             }
         ]
     }]
