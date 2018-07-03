@@ -82,53 +82,34 @@ $ui.render({
                 }
             },
             {
-                type: "list",
+                type: "matrix",
                 props: {
-                    id: "postList",
-                    showsVerticalIndicator: false,
-                    data: [
-                        {
-                            label: {
-                                text: "Hello"
-                            }
-                        },
-                        {
-                            label: {
-                                text: "Hello"
-                            }
-                        },
-                    ],
-                    template: {
+                  columns: 4,
+                  itemHeight: 88,
+                  spacing: 5,
+                  template: {
+                    props: {},
+                    views: [
+                      {
+                        type: "label",
                         props: {
-                            bgcolor: $color("white")
+                          id: "label",
+                          bgcolor: $color("#474b51"),
+                          textColor: $color("#abb2bf"),
+                          align: $align.center,
+                          font: $font(32)
                         },
-                        views: [
-                            {
-                                type: "label",
-                                props: {
-                                    id: "label",
-                                    lines: 2,
-                                    font: $font(22)
-                                },
-                                layout: $layout.fill
-                            }
-                        ]
-                    }
+                        layout: $layout.fill
+                      }
+                    ]
+                  }
                 },
-                layout: function (make, view) {
+                layout: function (make) {
                     make.top.equalTo($("logo").bottom).offset(5)
                     make.centerX.equalTo()
                     make.size.equalTo($size(__width, __height))
-                },
-                events: {
-                    pulled: function (sender) {
-                        $("postList").endRefreshing()
-                    }
-                },
-                views: [
-
-                ]
-            }
+                }
+              }
         ]
     }]
 })
