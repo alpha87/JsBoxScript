@@ -58,7 +58,7 @@ $ui.render({
             placeholder: "搜索",
             handler: function (text) {
               $http.get({
-                url: "https://sspai.com/api/v1/search?limit=10&type=article&offset=10&keyword=" + text,
+                url: "https://sspai.com/api/v1/search?limit=20&type=article&offset=0&keyword=" + text,
                 handler: function (resp) {
                   let allData = resp.data
                   let cdnUrl = "https://cdn.sspai.com/"
@@ -100,7 +100,7 @@ $ui.render({
             props: {
               id: "postView",
               radius: 15,
-              bgcolor: $color("#f4f4f4"),
+              bgcolor: $color("#F4F4F4"),
               textColor: $color("#abb2bf"),
               align: $align.center,
               font: $font(32)
@@ -147,8 +147,10 @@ $ui.render({
           _page += 10
           loadSspaiArticle(_page)
           $device.taptic(0)
-        }
+        },
+        pulled: function (sender) {
 
+        }
       }
     }
     ]
@@ -190,17 +192,22 @@ function loadSspaiArticle(_page) {
 function getNews(_url) {
   $ui.push({
     props: {
-      // navBarHidden: true,
-      statusBarHidden: true,
-      statusBarStyle: 1,
       title: "少数派",
     },
-    views: [{
-      type: "web",
-      props: {
-        url: _url
-      },
-      layout: $layout.fill
-    }]
+    views: [
+      {
+        type: "view",
+        props: {
+          bgcolor: $color("#FF0000")
+        },
+        layout: $layout.fill,
+        views: [{
+          type: "web",
+          props: {
+            url: _url
+          },
+          layout: $layout.fill,
+        }]
+      }]
   })
 }
