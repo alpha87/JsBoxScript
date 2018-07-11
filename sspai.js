@@ -148,9 +148,6 @@ $ui.render({
           loadSspaiArticle(_page)
           $device.taptic(0)
         },
-        pulled: function (sender) {
-
-        }
       }
     }
     ]
@@ -196,18 +193,11 @@ function getNews(_url) {
     },
     views: [
       {
-        type: "view",
-        props: {
-          bgcolor: $color("#FF0000")
-        },
-        layout: $layout.fill,
-        views: [{
           type: "web",
           props: {
             url: _url
           },
           layout: $layout.fill,
         }]
-      }]
   })
 }
