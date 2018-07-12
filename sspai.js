@@ -61,7 +61,7 @@ $ui.render({
             placeholder: "搜索",
             handler: function (text) {
               $http.get({
-                url: "https://sspai.com/api/v1/search?limit=20&type=article&offset=0&keyword=" + text,
+                url: "https://sspai.com/api/v1/search?limit=20&type=article&offset=0&keyword=" + $text.URLEncode(text),
                 handler: function (resp) {
                   let allData = resp.data
                   let cdnUrl = "https://cdn.sspai.com/"
