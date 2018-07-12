@@ -2,8 +2,11 @@ var __width = $device.info["screen"]["width"] - 5,
   __height = $device.info['screen']["height"] - 78,
   _page = 0;
 
+var popDelegate = null
+
 $ui.render({
   props: {
+    id: "list",
     title: "少数派",
     navBarHidden: true,
     statusBarStyle: 0,
@@ -151,7 +154,14 @@ $ui.render({
       }
     }
     ]
-  }]
+  }],
+  events: {
+    didAppear: function() {
+      if (popDelegate != null) {
+        $("list").runtimeValue().$viewController().$navigationController().$interactivePopGestureRecognizer().$setDelegate(popDelegate)
+      }
+    }
+  }
 })
 
 loadSspaiArticle(_page)
@@ -190,6 +200,9 @@ function getNews(_url) {
   $ui.push({
     props: {
       title: "少数派",
+      id: "web",
+      navBarHidden: true,
+      statusBarStyle: 0
     },
     views: [
       {
@@ -198,6 +211,12 @@ function getNews(_url) {
             url: _url
           },
           layout: $layout.fill,
-        }]
+    }],
+    events: {
+      didAppear: function(sender) {
+        popDelegate = $("web").runtimeValue().$viewController().$navigationController().$interactivePopGestureRecognizer().$delegate()
+        $("web").runtimeValue().$viewController().$navigationController().$interactivePopGestureRecognizer().$setDelegate(null)
+      }
+    }
   })
 }
