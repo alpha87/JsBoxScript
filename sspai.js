@@ -157,7 +157,7 @@ $ui.render({
                     _page += 10
                     loadSspaiArticle(_page)
                     $device.taptic(0)
-                },
+                }
             }
         }
         ]
@@ -235,7 +235,6 @@ function getNewVersion() {
             var data = resp.data
             var versionItem = new RegExp('const __version = "(.*?)v";', "g")
             var version = versionItem.exec(data)[1]
-            $console.info(version)
             if (version > __version) {
                 $ui.alert({
                     title: "检测到新版本",
