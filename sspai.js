@@ -1,33 +1,6 @@
 const __version = "1.2v";
 
-function getNewVersion() {
-    $http.get({
-        url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/sspai.js",
-        handler: function (resp) {
-            var data = resp.data
-            var versionItem = new RegExp('const __version = "(\d\.\d)v";', "g")
-            var version = versionItem.exec(data)[1]
-            if (version > __version) {
-                $ui.alert({
-                    title: "检测到新版本",
-                    message: "是否现在更新到最新版本",
-                    actions: [
-                        {
-                            title: "更新",
-                            handler: function () {
-                                $app.openURL(encodeURI("jsbox://install?name=少数派阅读&icon=045&url=https://raw.githubusercontent.com/alpha87/JsBoxScript/master/sspai.js"))
-                                $app.close()
-                            }
-                        },
-                        {
-                            title: "取消",
-                        }
-                    ]
-                })
-            }
-        }
-    })
-}
+getNewVersion()
 
 var __width = $device.info["screen"]["width"] - 5,
     __height = $device.info['screen']["height"] - 78,
@@ -250,6 +223,36 @@ function getNews(_url) {
             didAppear: function (sender) {
                 popDelegate = $("web").runtimeValue().$viewController().$navigationController().$interactivePopGestureRecognizer().$delegate()
                 $("web").runtimeValue().$viewController().$navigationController().$interactivePopGestureRecognizer().$setDelegate(null)
+            }
+        }
+    })
+}
+
+function getNewVersion() {
+    $http.get({
+        url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/sspai.js",
+        handler: function (resp) {
+            var data = resp.data
+            var versionItem = new RegExp('const __version = "(.*?)v";', "g")
+            var version = versionItem.exec(data)[1]
+            $console.info(version)
+            if (version > __version) {
+                $ui.alert({
+                    title: "检测到新版本",
+                    message: "是否现在更新到最新版本",
+                    actions: [
+                        {
+                            title: "更新",
+                            handler: function () {
+                                $app.openURL(encodeURI("jsbox://install?name=少数派阅读&icon=045&url=https://raw.githubusercontent.com/alpha87/JsBoxScript/master/sspai.js"))
+                                $app.close()
+                            }
+                        },
+                        {
+                            title: "取消",
+                        }
+                    ]
+                })
             }
         }
     })
