@@ -120,7 +120,7 @@ $ui.render({
                             },
                             layout: function (make, view) {
                                 make.centerX.equalTo()
-                                make.size.equalTo($size($("postList").frame.width - 20, 100))
+                                make.size.equalTo($size($("postList").frame.width, 105))
                             }
                         },
                         {
