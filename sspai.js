@@ -71,20 +71,22 @@ $ui.render({
                                     let cdnUrl = "https://cdn.sspai.com/"
                                     for (var data in allData["list"]) {
                                         let infors = allData["list"][data]
-                                        $("postList").insert({
-                                            indexPath: $indexPath(0, 0),
-                                            value: {
-                                                url: {
-                                                    text: "https://sspai.com/" + infors["id"]
-                                                },
-                                                postTitle: {
-                                                    text: infors["title"]
-                                                },
-                                                postImage: {
-                                                    src: cdnUrl + infors["banner"]
+                                        if (infors["id"] != undefined) {
+                                            $("postList").insert({
+                                                indexPath: $indexPath(0, 0),
+                                                value: {
+                                                    url: {
+                                                        text: "https://sspai.com/" + infors["id"]
+                                                    },
+                                                    postTitle: {
+                                                        text: infors["title"]
+                                                    },
+                                                    postImage: {
+                                                        src: cdnUrl + infors["banner"]
+                                                    }
                                                 }
-                                            }
-                                        })
+                                            })
+                                        }
                                     }
                                 }
                             })
