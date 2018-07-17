@@ -1,4 +1,4 @@
-const __version = "1.2v";
+const __version = "1.3v";
 
 getNewVersion()
 
