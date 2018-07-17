@@ -86,12 +86,33 @@ $ui.render({
                                                     }
                                                 }
                                             })
+                                            $("backIcon").hidden = false
                                         }
                                     }
                                 }
                             })
                         }
                     })
+                }
+            }
+        },
+        {
+            type: "button",
+            props: {
+                id: "backIcon",
+                hidden: true,
+                icon: $icon("162", $color("#e1e8f0"), $size(30, 30)),
+                bgcolor: $color("clear")
+            },
+            layout: function (make, view) {
+                make.top.equalTo($("logo")).offset(10)
+                make.right.inset(70)
+            },
+            events: {
+                tapped: function (sender) {
+                    $("postList").data = []
+                    loadSspaiArticle(_page)
+                    $("backIcon").hidden = true
                 }
             }
         },
