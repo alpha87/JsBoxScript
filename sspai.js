@@ -1,4 +1,4 @@
-const __version = "1.3v";
+const __version = "1.4v";
 
 getNewVersion()
 
@@ -7,6 +7,7 @@ var __width = $device.info["screen"]["width"] - 5,
     _page = 0;
 
 var popDelegate = null
+var search_key = null
 
 $ui.render({
     props: {
@@ -64,6 +65,7 @@ $ui.render({
                         type: $kbType.default,
                         placeholder: "搜索",
                         handler: function (text) {
+                            search_key = text
                             $http.get({
                                 url: "https://sspai.com/api/v1/search?limit=25&type=article&offset=0&keyword=" + $text.URLEncode(text),
                                 handler: function (resp) {
@@ -180,6 +182,16 @@ $ui.render({
                     _page += 10
                     loadSspaiArticle(_page)
                     $device.taptic(0)
+                },
+                pulled: function(sender) {
+                    if (search_key == null){
+                        $("postList").beginRefreshing()
+                        $("postList").data = []
+                        loadSspaiArticle(_page)
+                        $("postList").endRefreshing()
+                    } else {
+                        $("postList").endRefreshing()
+                    }
                 }
             }
         }
