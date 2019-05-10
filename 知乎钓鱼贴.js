@@ -242,7 +242,7 @@ function getNews(img_list) {
 
 function getNewVersion() {
     $http.get({
-        url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/sspai.js",
+        url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/%E7%9F%A5%E4%B9%8E%E9%92%93%E9%B1%BC%E8%B4%B4.js",
         handler: function (resp) {
             var data = resp.data
             var versionItem = new RegExp('const __version = "(.*?)v";', "g")
