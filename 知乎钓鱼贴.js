@@ -1,4 +1,4 @@
-const __version = "1.1v";
+const __version = "1.0v";
 
 $app.tips("长按可操作图片")
 
@@ -218,7 +218,7 @@ function getNews(img_list) {
                             if (idx === 0) {
                                 $ui.push({
                                     props: {
-                                        navBarHidden:true
+                                        navBarHidden: true
                                     },
                                     views: [{
                                         type: "web",
@@ -269,8 +269,33 @@ function getNewVersion() {
                     actions: [{
                             title: "更新",
                             handler: function () {
-                                $app.openURL(encodeURI("jsbox://install?name=知乎钓鱼贴&icon=045&url=https://raw.githubusercontent.com/alpha87/JsBoxScript/master/%E7%9F%A5%E4%B9%8E%E9%92%93%E9%B1%BC%E8%B4%B4.js"))
-                                $app.close()
+                                $http.download({
+                                    url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/%E7%9F%A5%E4%B9%8E%E9%92%93%E9%B1%BC%E8%B4%B4.js",
+                                    showsProgress: false,
+                                    handler: function (resp) {
+                                        $addin.save({
+                                            name: "知乎钓鱼贴",
+                                            data: resp.data,
+                                            icon: $addin.current.icon,
+                                            handler: function (success) {
+                                                $ui.alert({
+                                                    title: "完成",
+                                                    message: "已更新到最新版本！",
+                                                    actions: [{
+                                                            title: "使用最新版",
+                                                            handler: function () {
+                                                                $app.close();
+                                                            }
+                                                        },
+                                                        {
+                                                            title: "暂时不退出"
+                                                        }
+                                                    ]
+                                                });
+                                            }
+                                        })
+                                    }
+                                })
                             }
                         },
                         {
