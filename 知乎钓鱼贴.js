@@ -1,4 +1,4 @@
-const __version = "1.1v";
+const __version = "1.2v";
 
 $app.tips("长按可操作图片")
 
@@ -111,7 +111,16 @@ $ui.render({
                         getNews(data["img_list"]["array"])
                     },
                     didLongPress: function (sender, indexPath, data) {
-                        $share.sheet([data.url.text, data.postTitle.text])
+                        $ui.menu({
+                            items: ["在浏览器中打开", "分享"],
+                            handler: function (title, idx) {
+                                if (idx === 0) {
+                                    $app.openURL(data.url.text)
+                                } else {
+                                    $share.sheet([data.url.text, data.postTitle.text])
+                                }
+                            }
+                        })
                     },
                     didReachBottom: function (sender) {
                         sender.endFetchingMore()
