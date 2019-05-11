@@ -1,4 +1,4 @@
-const __version = "1.0v";
+const __version = "1.1v";
 
 $app.tips("长按可操作图片")
 
