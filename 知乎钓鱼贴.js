@@ -1,4 +1,6 @@
-const __version = "1.0v";
+const __version = "1.1v";
+
+$app.tips("长按可操作图片")
 
 getNewVersion()
 
@@ -174,16 +176,6 @@ function loadSspaiArticle(_page) {
     })
 }
 
-function convert(item) {
-    return {
-
-        image: {
-            src: item
-        }
-    }
-
-}
-
 function getNews(img_list) {
 
     $ui.push({
@@ -196,8 +188,12 @@ function getNews(img_list) {
         views: [{
             type: "list",
             props: {
-                data: img_list.map(function (item) {
-                    return convert(item);
+                data: img_list.map(item => {
+                    return {
+                        image: {
+                            src: item
+                        }
+                    }
                 }),
                 rowHeight: __height,
                 separatorHidden: true,
@@ -216,18 +212,37 @@ function getNews(img_list) {
             },
             events: {
                 didLongPress: function (sender, indexPath, data) {
-                    $http.download({
-                        url: data.image.src,
-                        showsProgress: true,
-                        progress: function (bytesWritten, totalBytes) {
-                            var percentage = bytesWritten * 1.0 / totalBytes
-                        },
-                        handler: function (resp) {
-                            $share.sheet(resp.data)
+                    $ui.menu({
+                        items: ["查看原图", "分享图片"],
+                        handler: function (title, idx) {
+                            if (idx === 0) {
+                                $ui.push({
+                                    props: {
+                                        navBarHidden:true
+                                    },
+                                    views: [{
+                                        type: "web",
+                                        props: {
+                                            url: data.image.src
+                                        },
+                                        layout: $layout.fill
+                                    }]
+                                });
+                            } else {
+                                $http.download({
+                                    url: data.image.src,
+                                    showsProgress: true,
+                                    progress: function (bytesWritten, totalBytes) {
+                                        var percentage = bytesWritten * 1.0 / totalBytes
+                                    },
+                                    handler: function (resp) {
+                                        $share.sheet(resp.data)
+                                    }
+                                })
+                            }
                         }
                     })
-
-                },
+                }
             },
             layout: $layout.fill,
         }],
