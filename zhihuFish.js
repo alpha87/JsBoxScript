@@ -1,13 +1,9 @@
-const __version = "1.3v";
-
 /**
  * 微信小程序关注：宅宅生活收藏夹
  * 感谢支持！
  */
 
 $app.tips("长按可操作图片")
-
-getNewVersion()
 
 var __width = $device.info["screen"]["width"],
     __height = $device.info['screen']["height"],
@@ -372,59 +368,6 @@ function getNews(img_list) {
             didAppear: function (sender) {
                 popDelegate = $("web").runtimeValue().$viewController().$navigationController().$interactivePopGestureRecognizer().$delegate()
                 $("web").runtimeValue().$viewController().$navigationController().$interactivePopGestureRecognizer().$setDelegate(null)
-            }
-        }
-    })
-}
-
-function getNewVersion() {
-    $http.get({
-        url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/%E7%9F%A5%E4%B9%8E%E9%92%93%E9%B1%BC%E8%B4%B4.js",
-        handler: function (resp) {
-            var data = resp.data
-            var versionItem = new RegExp('const __version = "(.*?)v";', "g")
-            var version = versionItem.exec(data)[1]
-            if (version > __version) {
-                $ui.alert({
-                    title: "检测到新版本",
-                    message: "是否现在更新到最新版本",
-                    actions: [{
-                            title: "更新",
-                            handler: function () {
-                                $http.download({
-                                    url: "https://raw.githubusercontent.com/alpha87/JsBoxScript/master/%E7%9F%A5%E4%B9%8E%E9%92%93%E9%B1%BC%E8%B4%B4.js",
-                                    showsProgress: false,
-                                    handler: function (resp) {
-                                        $addin.save({
-                                            name: "知乎钓鱼贴",
-                                            data: resp.data,
-                                            icon: $addin.current.icon,
-                                            handler: function (success) {
-                                                $ui.alert({
-                                                    title: "完成",
-                                                    message: "已更新到最新版本！",
-                                                    actions: [{
-                                                            title: "使用最新版",
-                                                            handler: function () {
-                                                                $app.close();
-                                                            }
-                                                        },
-                                                        {
-                                                            title: "暂时不退出"
-                                                        }
-                                                    ]
-                                                });
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        },
-                        {
-                            title: "取消",
-                        }
-                    ]
-                })
             }
         }
     })
