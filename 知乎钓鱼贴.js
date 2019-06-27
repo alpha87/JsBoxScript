@@ -1,4 +1,9 @@
-const __version = "1.2v";
+const __version = "1.3v";
+
+/**
+ * 微信小程序关注：宅宅生活收藏夹
+ * 感谢支持！
+ */
 
 $app.tips("长按可操作图片")
 
@@ -12,6 +17,8 @@ var popDelegate = null
 var search_key = null
 
 var img_list = null
+
+$ui.loading("加载中...")
 
 $ui.render({
     props: {
@@ -50,6 +57,111 @@ $ui.render({
                 layout: function (make, view) {
                     make.left.equalTo($("logo").right).offset(5)
                     make.top.equalTo($("logo")).offset(22)
+                }
+            },
+            {
+                type: "button",
+                props: {
+                    title: "使用微信小程序查看更多最新图片",
+                    bgcolor: $rgb(245, 245, 245),
+                    radius: 15,
+                    titleColor: $rgb(38, 92, 162)
+                },
+                layout: function (make, view) {
+                    make.centerX.equalTo()
+                    make.size.equalTo($size(__width - 10, 70))
+                    make.top.equalTo($("logo").bottom).offset(10)
+                },
+                events: {
+                    tapped: function (sender) {
+                        $ui.push({
+                            props: {
+                                title: "宅宅生活收藏夹"
+                            },
+                            views: [{
+                                type: "label",
+                                props: {
+                                    text: "保存小程序码到相册",
+                                    align: $align.center
+                                },
+                                layout: function (make, view) {
+                                    make.top.equalTo(40)
+                                    make.centerX.equalTo()
+                                }
+                            }, {
+                                type: "label",
+                                props: {
+                                    text: "或直接在微信中搜索",
+                                    align: $align.center
+                                },
+                                layout: function (make, view) {
+                                    make.top.equalTo(70)
+                                    make.centerX.equalTo()
+                                }
+                            }, {
+                                type: "label",
+                                props: {
+                                    text: "宅宅生活收藏夹",
+                                    font: $font("bold", 18),
+                                    align: $align.center
+                                },
+                                layout: function (make, view) {
+                                    make.top.equalTo(100)
+                                    make.centerX.equalTo()
+                                }
+                            }, {
+                                type: "image",
+                                props: {
+                                    src: "https://user-images.githubusercontent.com/25655581/60225800-f3046000-98ba-11e9-9371-3687987285b6.png"
+                                },
+                                layout: function (make, view) {
+                                    make.center.equalTo(view.super)
+                                    make.size.equalTo($size(300, 300))
+                                },
+                                events: {
+                                    tapped: function (sender) {
+                                        $http.download({
+                                            url: sender.src,
+                                            showsProgress: true,
+                                            progress: function (bytesWritten, totalBytes) {
+                                                var percentage = bytesWritten * 1.0 / totalBytes
+                                            },
+                                            handler: function (resp) {
+                                                $share.sheet(resp.data)
+                                            }
+                                        })
+                                    },
+                                    didLongPress: function (sender, indexPath, data) {
+                                        $http.download({
+                                            url: sender.src,
+                                            showsProgress: true,
+                                            progress: function (bytesWritten, totalBytes) {
+                                                var percentage = bytesWritten * 1.0 / totalBytes
+                                            },
+                                            handler: function (resp) {
+                                                $share.sheet(resp.data)
+                                            }
+                                        })
+                                    },
+                                }
+                            },{
+                                type: "button",
+                                props: {
+                                  title: " 跳转到微信搜索 "
+                                },
+                                layout: function(make, view) {
+                                    make.top.equalTo(470)
+                                    make.centerX.equalTo()
+                                },events: {
+                                    tapped: function(sender) {
+                                        $clipboard.text = "宅宅生活收藏夹"
+                                        $ui.toast("已复制");
+                                        $app.openURL("weixin://")
+                                    }
+                                }
+                              }]
+                        });
+                    }
                 }
             },
             {
@@ -102,7 +214,7 @@ $ui.render({
                     }
                 },
                 layout: function (make) {
-                    make.top.equalTo($("logo").bottom).offset(5)
+                    make.top.equalTo($("logo").bottom).offset(80)
                     make.centerX.equalTo()
                     make.size.equalTo($size(__width, __height))
                 },
@@ -161,6 +273,7 @@ function loadSspaiArticle(_page) {
         },
         handler: function (resp) {
             let allData = resp.data
+            $ui.loading(true)
             for (var data in allData["articles"]) {
                 let infors = allData["articles"][data]
                 $("postList").insert({
